@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Amazon Ramp Split Tool</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs" type="module"></script>
+  <style>
+    :root {
+      --navy:#103b52;
+      --blue:#0e7490;
+      --light:#f4f7fa;
+      --line:#d7e0e7;
+      --text:#1e293b;
+      --muted:#64748b;
+      --good:#176b45;
+      --good-bg:#e9f7ef;
+      --bad:#a83232;
+      --bad-bg:#fdecec;
+      --white:#fff;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--light);font-family:Segoe UI,Arial,sans-serif;color:var(--text);font-size:14px}
+    .topbar{background:var(--navy);color:#fff;padding:14px 22px;box-shadow:0 2px 8px rgba(15,23,42,.15)}
+    .topbar h1{margin:0;font-size:21px;font-weight:700}
+    .topbar p{margin:4px 0 0;color:#d7eaf3;font-size:13px}
+    .page{max-width:1220px;margin:22px auto;padding:0 18px 34px}
+    .upload-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:18px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;box-shadow:0 3px 12px rgba(15,23,42,.05)}
+    .upload-left{display:flex;gap:12px;align-items:center}
+    .upload-icon{width:42px;height:42px;border-radius:9px;background:#e7f3f7;display:grid;place-items:center;font-size:21px}
+    .upload-copy strong{display:block;font-size:15px}.upload-copy span{color:var(--muted);font-size:12px}
+    .actions{display:flex;gap:9px;flex-wrap:wrap}
+    button,.file-label{border:none;border-radius:6px;padding:9px 13px;font-size:13px;font-weight:650;cursor:pointer}
+    .primary{background:var(--blue);color:#fff}.secondary{background:#e8eef2;color:var(--navy)}.danger{background:#f6e9e9;color:#8d2b2b}
+    input[type=file]{display:none}
+    .stack{display:flex;flex-direction:column;gap:18px}
+    .panel{background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden;box-shadow:0 3px 12px rgba(15,23,42,.05)}
+    details.panel > summary{list-style:none;cursor:pointer}
+    details.panel > summary::-webkit-details-marker{display:none}
+    .collapse-head{padding:13px 15px;display:flex;justify-content:space-between;align-items:center;background:#fbfcfd}
+    .collapse-title{display:flex;align-items:center;gap:9px;font-weight:700;color:var(--navy)}
+    .chevron{font-size:13px;transition:transform .18s ease}
+    details[open] .chevron{transform:rotate(90deg)}
+    .panel-head{padding:13px 15px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;background:#fbfcfd}
+    .panel-head h2{font-size:15px;margin:0;color:var(--navy)}
+    .badge{font-size:11px;padding:4px 8px;border-radius:999px;background:#e8f2f6;color:var(--navy);font-weight:700}
+    .invoice-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px 15px;border-bottom:1px solid var(--line)}
+    .meta{background:#f8fafc;border:1px solid #e8edf2;border-radius:7px;padding:9px}.meta label{display:block;color:var(--muted);font-size:11px;margin-bottom:3px}.meta div{font-weight:700;font-size:13px;word-break:break-word}
+    .items{padding:12px}
+    .item{border:1px solid var(--line);border-radius:8px;margin-bottom:10px;overflow:hidden}
+    .item-top{display:grid;grid-template-columns:minmax(0,1.4fr) 72px 82px 82px 82px;gap:8px;align-items:center;padding:10px 11px;background:#fbfcfd;border-bottom:1px solid #e8edf2}
+    .desc{font-weight:700;color:#263849;line-height:1.3}.small{font-size:11px;color:var(--muted);margin-top:3px}
+    .money{text-align:right;font-variant-numeric:tabular-nums}.money label{display:block;color:var(--muted);font-size:10px}.money span{font-weight:700}
+    .item-bottom{display:grid;grid-template-columns:1fr 1fr 1.3fr auto;gap:10px;padding:10px 11px;align-items:end}
+    label.field{font-size:11px;color:var(--muted);display:block;margin-bottom:4px;font-weight:650}
+    select,input[type=text],input[type=number]{width:100%;border:1px solid #cbd5df;border-radius:5px;padding:7px 8px;font-size:12px;background:#fff}
+    .remove{width:32px;height:32px;padding:0;background:#f4e9e9;color:#8d2b2b}
+    .summary-body{padding:14px}
+    .split{border:1px solid var(--line);border-radius:8px;padding:11px 12px;margin-bottom:10px}
+    .split-title{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.split-title strong{color:var(--navy)}.split-amount{font-size:16px;font-weight:800;font-variant-numeric:tabular-nums}
+    .memo{font-size:12px;color:#4b5f6d;margin-top:6px;line-height:1.35}
+    .totals{border-top:1px solid var(--line);margin-top:14px;padding-top:12px}
+    .total-row{display:flex;justify-content:space-between;margin:7px 0}.total-row strong{font-size:15px}
+    .balance{margin-top:12px;padding:10px;border-radius:7px;text-align:center;font-weight:800}.balanced{background:var(--good-bg);color:var(--good)}.unbalanced{background:var(--bad-bg);color:var(--bad)}
+    .note{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.4}
+    .empty{padding:28px;text-align:center;color:var(--muted)}
+    .loading{display:none;color:var(--blue);font-weight:700;font-size:12px}
+    @media(max-width:900px){.invoice-meta{grid-template-columns:1fr 1fr}.item-top{grid-template-columns:1fr 70px 78px}.item-top .money:nth-last-child(-n+2){display:none}.item-bottom{grid-template-columns:1fr 1fr}.remove{width:100%}}
+    @media print{
+      body{background:#fff}.topbar,.upload-card,details.panel,.actions{display:none!important}.page{max-width:none;margin:0;padding:0}.panel{border:none;box-shadow:none}.panel-head{background:#fff;padding:0 0 12px}.summary-body{padding:0}.split{break-inside:avoid}.note{display:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <h1>Amazon Ramp Split Tool</h1>
+    <p>Upload an Amazon Business PDF, assign each line to a Ramp item, and create a balanced split summary.</p>
+  </div>
+
+  <main class="page">
+    <section class="upload-card">
+      <div class="upload-left">
+        <div class="upload-icon">📄</div>
+        <div class="upload-copy">
+          <strong>Amazon Business PDF</strong>
+          <span id="fileName">Sample invoice loaded for preview</span>
+        </div>
+      </div>
+      <div class="actions">
+        <label class="file-label primary" for="pdfFile">Choose PDF</label>
+        <input id="pdfFile" type="file" accept="application/pdf" />
+        <button class="secondary" onclick="loadSample()">Load Sample</button>
+        <button class="secondary" onclick="window.print()">Print Summary</button>
+        <button class="danger" onclick="resetAll()">Reset</button>
+      </div>
+      <div id="loading" class="loading">Reading PDF…</div>
+    </section>
+
+    <div class="stack">
+      <section class="panel">
+        <div class="panel-head"><h2>Ramp Split Summary</h2><span class="badge">Includes tax</span></div>
+        <div id="summary" class="summary-body"></div>
+      </section>
+
+      <details class="panel">
+        <summary class="collapse-head">
+          <div class="collapse-title"><span class="chevron">▶</span> Review or Edit Extracted Purchase Lines</div>
+          <span class="badge" id="lineCount">0 lines</span>
+        </summary>
+        <div class="invoice-meta">
+          <div class="meta"><label>Order Date</label><div id="orderDate">—</div></div>
+          <div class="meta"><label>Order Number</label><div id="orderNumber">—</div></div>
+          <div class="meta"><label>Card Used</label><div id="cardUsed">—</div></div>
+          <div class="meta"><label>Receipt Total</label><div id="receiptTotal">$0.00</div></div>
+        </div>
+        <div id="items" class="items"></div>
+      </details>
+    </div>
+  </main>
+
+<script type="module">
+  const categories = [
+    'GS-Coffee/Coffee Supplies','GS-Paper Towels','GS-Toiletries-Soap/Shampoo/Lotion','GS-Laundry Supplies - Guest Use','GS-Trash Can Liners','GS-Tissues','GS-Kitchen Supplies (dish soap/detergent, sponges)','GS-Toilet Paper','GS-Water bottles','GS-Owner stay Fee','GS-Comp stays','GS-Spices',
+    'US-Unit Bedroom Supplies','US-Unit Bathroom Supplies','US-Unit Kitchen Supplies','US-Unit Miscellaneous Supplies','US-Unit OnBoarding Supplies','US-Keurig','US-Point Central Locks/Thermostats','US-Exterior/Common Area','US-Furniture',
+    'F&B-Mixers Purchases','F&B-Miscellaneous Purchases','F&B-Paper, Plastic & Disposables','F&B-Glassware & Utensils',
+    'Linen - Sheets','Linen - Mattress Pads','Linen - Pillow Protectors','Linen - Shower Curtains','Linen - Bath Towels & Washcloths','Linen - Blankets','Linen - Duvets','Linen - Pool Towels','Linen - Pillows','Linen - 3rd Party Purchased','Linen - Bedskirts','Linen - Other','Linen - Kitchen Towels'
+  ];
+
+  let invoice = { date:'', order:'', card:'', total:0, items:[] };
+  const money = n => `$${Number(n || 0).toFixed(2)}`;
+  const esc = s => String(s ?? '').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+
+  function suggestCategory(description){
+    const d = description.toLowerCase();
+    if(d.includes('paper towel') || d.includes('bounty')) return 'GS-Paper Towels';
+    if(d.includes('toilet paper') || d.includes('charmin') || d.includes('cottonelle')) return 'GS-Toilet Paper';
+    if(d.includes('shampoo') || d.includes('conditioner') || d.includes('body wash') || d.includes('soap')) return 'GS-Toiletries-Soap/Shampoo/Lotion';
+    if(d.includes('dish soap') || d.includes('dishwasher') || d.includes('sponge') || d.includes('cascade') || d.includes('dawn')) return 'GS-Kitchen Supplies (dish soap/detergent, sponges)';
+    if(d.includes('trash bag') || d.includes('trash liner')) return 'GS-Trash Can Liners';
+    if(d.includes('tissue') || d.includes('kleenex')) return 'GS-Tissues';
+    if(d.includes('coffee') || d.includes('keurig') || d.includes('k-cup')) return 'GS-Coffee/Coffee Supplies';
+    if(d.includes('water bottle')) return 'GS-Water bottles';
+    if(d.includes('sheet')) return 'Linen - Sheets';
+    if(d.includes('pillow')) return 'Linen - Pillows';
+    if(d.includes('towel') || d.includes('washcloth')) return 'Linen - Bath Towels & Washcloths';
+    return 'US-Unit Miscellaneous Supplies';
+  }
+
+  function memoForCategory(category){
+    const map = {
+      'GS-Coffee/Coffee Supplies':'Coffee Supplies',
+      'GS-Paper Towels':'Paper Towels',
+      'GS-Toiletries-Soap/Shampoo/Lotion':'Toiletries',
+      'GS-Laundry Supplies - Guest Use':'Laundry Supplies',
+      'GS-Trash Can Liners':'Trash Can Liners',
+      'GS-Tissues':'Tissues',
+      'GS-Kitchen Supplies (dish soap/detergent, sponges)':'Kitchen Supplies',
+      'GS-Toilet Paper':'Toilet Paper',
+      'GS-Water bottles':'Water Bottles',
+      'GS-Spices':'Spices',
+      'Linen - Sheets':'Sheets',
+      'Linen - Mattress Pads':'Mattress Pads',
+      'Linen - Pillow Protectors':'Pillow Protectors',
+      'Linen - Shower Curtains':'Shower Curtains',
+      'Linen - Bath Towels & Washcloths':'Bath Towels & Washcloths',
+      'Linen - Blankets':'Blankets',
+      'Linen - Duvets':'Duvets',
+      'Linen - Pool Towels':'Pool Towels',
+      'Linen - Pillows':'Pillows',
+      'Linen - Kitchen Towels':'Kitchen Towels'
+    };
+    return map[category] || category.replace(/^.*?-\s*/, '').replace(/^Unit\s+/i,'').trim();
+  }
+
+  function categoryOptions(selected){
+    const groups = [
+      ['GSC - Guest Stay Consumables', categories.slice(0,12)],
+      ['US - Unit Supplies', categories.slice(12,21)],
+      ['F&B - Food & Beverage', categories.slice(21,25)],
+      ['Linen', categories.slice(25)]
+    ];
+    return groups.map(([label,opts])=>`<optgroup label="${label}">${opts.map(o=>`<option ${o===selected?'selected':''}>${esc(o)}</option>`).join('')}</optgroup>`).join('');
+  }
+
+  function render(){
+    document.getElementById('orderDate').textContent = invoice.date || '—';
+    document.getElementById('orderNumber').textContent = invoice.order || '—';
+    document.getElementById('cardUsed').textContent = invoice.card || '—';
+    document.getElementById('receiptTotal').textContent = money(invoice.total);
+    document.getElementById('lineCount').textContent = `${invoice.items.length} line${invoice.items.length===1?'':'s'}`;
+
+    const itemsEl = document.getElementById('items');
+    if(!invoice.items.length){ itemsEl.innerHTML='<div class="empty">Upload an Amazon Business PDF to begin.</div>'; }
+    else {
+      itemsEl.innerHTML = invoice.items.map((it,i)=>`
+        <div class="item">
+          <div class="item-top">
+            <div><div class="desc">${esc(it.description)}</div><div class="small">${esc(it.costCenter || '')}${it.location ? ' · Location: '+esc(it.location):''}</div></div>
+            <div class="money"><label>Qty</label><span>${it.qty}</span></div>
+            <div class="money"><label>Amount</label><span>${money(it.amount)}</span></div>
+            <div class="money"><label>Tax</label><span>${money(it.tax)}</span></div>
+            <div class="money"><label>Line Total</label><span>${money(it.amount + it.tax)}</span></div>
+          </div>
+          <div class="item-bottom">
+            <div><label class="field">Ramp Item</label><select onchange="updateCategory(${i},this.value)">${categoryOptions(it.category)}</select></div>
+            <div><label class="field">Entity</label><input type="text" value="${esc(it.entity || '')}" placeholder="e.g. MC" oninput="updateItem(${i},'entity',this.value)"></div>
+            <div><label class="field">Memo</label><input type="text" value="${esc(it.memo || it.description)}" oninput="updateItem(${i},'memo',this.value)"></div>
+            <button class="remove" title="Remove line" onclick="removeItem(${i})">×</button>
+          </div>
+        </div>`).join('');
+    }
+    renderSummary();
+  }
+
+  function renderSummary(){
+    const groups = {};
+    invoice.items.forEach(it=>{
+      const memo=(it.memo||memoForCategory(it.category)||'').trim();
+      const key = `${it.entity || 'Unassigned'}|||${it.category || 'Unassigned'}|||${memo}`;
+      if(!groups[key]) groups[key]={entity:it.entity || 'Unassigned',category:it.category || 'Unassigned',amount:0,memo};
+      groups[key].amount += Number(it.amount||0)+Number(it.tax||0);
+    });
+    const calc = Object.values(groups).reduce((s,g)=>s+g.amount,0);
+    const diff = calc - Number(invoice.total||0);
+    const balanced = Math.abs(diff) < 0.01;
+    const summary = document.getElementById('summary');
+    if(!invoice.items.length){ summary.innerHTML='<div class="empty">The Ramp split will appear here.</div>'; return; }
+    summary.innerHTML = Object.values(groups).map(g=>`
+      <div class="split">
+        <div class="split-title"><div><strong>${esc(g.category)}</strong><div class="small">Entity: ${esc(g.entity)}</div></div><div class="split-amount">${money(g.amount)}</div></div>
+        <div class="memo"><strong>Memo:</strong> ${esc(g.memo)}</div>
+      </div>`).join('') + `
+      <div class="totals">
+        <div class="total-row"><span>Receipt Total</span><span>${money(invoice.total)}</span></div>
+        <div class="total-row"><strong>Total Ramp Split</strong><strong>${money(calc)}</strong></div>
+        <div class="total-row"><span>Difference</span><span>${diff<0?'-':''}${money(Math.abs(diff))}</span></div>
+        <div class="balance ${balanced?'balanced':'unbalanced'}">${balanced?'✓ Balanced':'✕ Not Balanced'}</div>
+        <div class="note">The Ramp split amount uses each Amazon line's net item amount plus its assigned sales tax. Quantity is used only to read the receipt and is not included in the final summary.</div>
+      </div>`;
+  }
+
+  window.updateItem=(i,k,v)=>{invoice.items[i][k]=v;renderSummary();};
+  window.updateCategory=(i,v)=>{invoice.items[i].category=v;invoice.items[i].memo=memoForCategory(v);render();};
+  window.removeItem=i=>{invoice.items.splice(i,1);render();};
+  window.resetAll=()=>{invoice={date:'',order:'',card:'',total:0,items:[]};document.getElementById('fileName').textContent='No PDF selected';render();};
+
+  window.loadSample=()=>{
+    invoice={
+      date:'July 31, 2026', order:'113-9358752-1315441', card:'Visa (1315)', total:462.21,
+      items:[
+        ...Array.from({length:5},()=>({description:'Bounty Quick-Size Paper Towels, White, 8 Family Triple Rolls = 27 Regular Rolls',qty:1,unitPrice:29.99,amount:29.59,tax:2.10,discount:-0.40,costCenter:'Paid by KWVC',location:'cfl',entity:'MC',category:'GS-Paper Towels',memo:'Paper Towels'})),
+        ...Array.from({length:2},()=>({description:'Charmin Ultra Strong Clean Touch Toilet Paper, 24 Family Mega Rolls = 120 Regular Rolls',qty:4,unitPrice:35.49,amount:141.96,tax:9.92,discount:0,costCenter:'Paid by KWVC',location:'cfl',entity:'MC',category:'GS-Toilet Paper',memo:'Toilet Paper'}))
+      ]
+    };
+    document.getElementById('fileName').textContent='Sample: Amazon order 113-9358752-1315441';
+    render();
+  };
+
+  async function parsePdf(file){
+    const loading=document.getElementById('loading'); loading.style.display='block';
+    try{
+      const pdfjsLib = await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs');
+      pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
+      const data=await file.arrayBuffer();
+      const pdf=await pdfjsLib.getDocument({data}).promise;
+      let full='';
+      for(let p=1;p<=pdf.numPages;p++){
+        const page=await pdf.getPage(p); const tc=await page.getTextContent();
+        full += '\n' + tc.items.map(x=>x.str).join(' ');
+      }
+      const clean=full.replace(/\s+/g,' ').trim();
+      const total=Number((clean.match(/Total:\s*\$([\d,]+\.\d{2})/i)||clean.match(/^.*?\$([\d,]+\.\d{2})\s+Card Used/i)||[])[1]?.replace(/,/g,''))||0;
+      const order=(clean.match(/Order Number\s*([\d-]{10,})/i)||[])[1]||'';
+      const card=(clean.match(/Card Used\s*(Visa|Mastercard|American Express|Discover)?\s*\(?([\d]{4})\)?/i));
+      const date=(clean.match(/([A-Z][a-z]+\s+\d{1,2},\s+\d{4})/i)||[])[1]||'';
+
+      // Amazon Business invoices repeat each product as: description, cost center, location, quantity, unit price, amount, tax, optional discount.
+      const body=(clean.split(/Description\s+Quantity\s+Unit Price\s+Amount/i)[1]||clean).split(/Total:/i)[0];
+      const blocks=body.split(/(?=[A-Z][^$]{12,}?\s+Cost center:)/g).map(x=>x.trim()).filter(x=>/Cost center:/i.test(x));
+      const parsed=[];
+      for(const b of blocks){
+        const desc=(b.match(/^(.*?)\s+Cost center:/i)||[])[1]?.trim();
+        const cc=(b.match(/Cost center:\s*(.*?)\s+Location:/i)||[])[1]?.trim()||'';
+        const loc=(b.match(/Location:\s*([^\s]+).*?/i)||[])[1]||'';
+        const nums=[...b.matchAll(/\$(-?[\d,]+\.\d{2})/g)].map(m=>Number(m[1].replace(/,/g,'')));
+        const qtyMatch=b.match(/Location:\s*[^\s]+\s+(\d+)\s+\$[\d,]+\.\d{2}\s+\$[\d,]+\.\d{2}/i);
+        if(desc && nums.length>=3){
+          const unitPrice=nums[0], amount=nums[1], tax=nums[2]||0;
+          parsed.push({description:desc,qty:Number(qtyMatch?.[1]||1),unitPrice,amount,tax,discount:nums[3]||0,costCenter:cc,location:loc,entity:'',category:suggestCategory(desc),memo:memoForCategory(suggestCategory(desc))});
+        }
+      }
+      if(!parsed.length) throw new Error('No purchase lines were detected. This preview currently supports the Amazon Business invoice layout shown in the sample.');
+      invoice={date,order,card:card?`${card[1]||'Card'} (${card[2]})`:'',total,items:parsed};
+      document.getElementById('fileName').textContent=file.name;
+      render();
+    }catch(err){
+      alert(err.message);
+    }finally{loading.style.display='none';}
+  }
+
+  document.getElementById('pdfFile').addEventListener('change',e=>{const f=e.target.files?.[0];if(f)parsePdf(f);});
+  loadSample();
+</script>
+</body>
+</html>
