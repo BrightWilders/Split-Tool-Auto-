@@ -411,7 +411,7 @@
         [/\bspices?\b|\bsalt packets?\b|\bpepper packets?\b/, 'GS-Spices'],
         [/\bbath towels?\b|\bwashcloths?\b|\bwash cloths?\b/, 'Linen - Bath Towels & Washcloths'],
         [/\bpool towels?\b/, 'Linen - Pool Towels'],
-        [/\bsheet sets?\b|\bbed sheets?\b|\bfitted sheets?\b|\bflat sheets?\b/, 'Linen - Sheets'],
+        [/\bsheet sets?\b|\bbed sheets?\b|\bfitted sheets?\b|\bflat sheets?\b|\b(?:king|queen|california king|twin|full) sheets?\b/, 'Linen - Sheets'],
         [/\bpillow protectors?\b/, 'Linen - Pillow Protectors'],
         [/\bpillows?\b/, 'Linen - Pillows'],
         [/\bmattress pads?\b|\bmattress protectors?\b/, 'Linen - Mattress Pads'],
@@ -442,63 +442,137 @@
       return byY.map(row => row.items.sort((a,b)=>a.x-b.x).map(i=>i.text).join(' ').replace(/\s+/g,' ').trim());
     }
 
+    function allocateTax(items, totalTax) {
+      const cents = Math.round(Number(totalTax || 0) * 100);
+      const subtotal = items.reduce((sum, item) => sum + item.amount, 0);
+      if (!items.length || !cents || !subtotal) {
+        items.forEach(item => item.tax = 0);
+        return;
+      }
+      const shares = items.map((item, index) => {
+        const exact = cents * item.amount / subtotal;
+        const floor = Math.floor(exact);
+        return { index, floor, fraction: exact - floor };
+      });
+      let assigned = shares.reduce((sum, x) => sum + x.floor, 0);
+      shares.sort((a,b) => b.fraction - a.fraction || a.index - b.index);
+      for (let i=0; i<cents-assigned; i++) shares[i].floor += 1;
+      shares.sort((a,b) => a.index - b.index);
+      shares.forEach(x => items[x.index].tax = x.floor / 100);
+    }
+
     function parseAmazon(lines) {
       const joined = lines.join('\n');
       const orderNumber = (joined.match(/\b\d{3}-\d{7}-\d{7}\b/) || [])[0] || '—';
       const dateMatch = joined.match(/(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s+\d{4}/i);
-      const totalMatches = [...joined.matchAll(/(?:^|\s)Total:\s*\$([\d,]+\.\d{2})/gmi)];
-      const total = totalMatches.length ? Number(totalMatches.at(-1)[1].replace(/,/g,'')) : 0;
 
+      // Ramp-exported Amazon Business receipt format.
+      const rampTotalMatches = [...joined.matchAll(/(?:^|\s)Total:\s*\$([\d,]+\.\d{2})/gmi)];
+      const rampTotal = rampTotalMatches.length ? Number(rampTotalMatches.at(-1)[1].replace(/,/g,'')) : 0;
+
+      // Amazon order-details format used by team members while coding.
+      const orderTotalMatch = joined.match(/(?:Order Total|Grand Total):\s*\$([\d,]+\.\d{2})/i);
+      const orderTotal = orderTotalMatch ? Number(orderTotalMatch[1].replace(/,/g,'')) : 0;
+      const estimatedTaxMatch = joined.match(/(?:Estimated Tax|Sales Tax):\s*\$([\d,]+\.\d{2})/i);
+      const aggregateTax = estimatedTaxMatch ? Number(estimatedTaxMatch[1].replace(/,/g,'')) : 0;
+
+      const isOrderDetails = /Details for Order|Items Ordered/i.test(joined) && /\d+\s+of:/i.test(joined);
       const items = [];
-      let buffer = [];
-      let current = null;
 
-      const skip = line => {
-        const s = line.trim();
-        return !s ||
-          /^Description\b/i.test(s) || /^Quantity\b/i.test(s) || /^Unit Price\b/i.test(s) ||
-          /^Card Used\b/i.test(s) || /^Order Number\b/i.test(s) || /^PO Number\b/i.test(s) ||
-          /^Visa\s*\(/i.test(s) || /^Unit Supplies\b/i.test(s) || /^Cost center:/i.test(s) ||
-          /^Location:/i.test(s) || /^Taxes:/i.test(s) || /^Total:/i.test(s) ||
-          /^\$[\d,]+\.\d{2}$/.test(s) || /^\d{3}-\d{7}-\d{7}$/.test(s) ||
-          /^(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s+\d{4}/i.test(s);
-      };
+      if (isOrderDetails) {
+        let current = null;
+        const stopDescription = /^(?:Sold by|Seller Credentials:|Business Price|Condition:|Shipping Address:|Shipping Speed:|Items Ordered|Not Yet Shipped|Shipped on|Payment information|Payment Method:|Billing address|Item\(s\) Subtotal:|Shipping & Handling:|Total before tax:|Sales Tax:|Estimated Tax:|Total for This Shipment:|Grand Total:|Order Total:|Cost center:|Location:|PO number|Amazon\.com order number|Details for Order|To view the status|Conditions of Use)/i;
 
-      for (const raw of lines) {
-        const line = raw.replace(/\s+/g,' ').trim();
-        if (!line) continue;
+        for (const raw of lines) {
+          const line = raw.replace(/\s+/g,' ').trim();
+          if (!line) continue;
 
-        const tax = line.match(/^Tax\s+\$([\d,]+\.\d{2})$/i);
-        if (tax && current) { current.tax = Number(tax[1].replace(/,/g,'')); continue; }
-        const discount = line.match(/^Discount\s+-?\$([\d,]+\.\d{2})$/i);
-        if (discount && current) { current.discount = Number(discount[1].replace(/,/g,'')); continue; }
+          // Usually the quantity, description, and unit price are on one PDF text row.
+          let m = line.match(/^(\d+)\s+of:\s*(.*?)\s+\$([\d,]+\.\d{2})$/i);
+          if (m) {
+            current = {
+              description: m[2].trim(),
+              qty: Number(m[1]),
+              unitPrice: Number(m[3].replace(/,/g,'')),
+              amount: 0,
+              tax: 0,
+              discount: 0
+            };
+            current.amount = +(current.qty * current.unitPrice).toFixed(2);
+            items.push(current);
+            continue;
+          }
 
-        // Product description and numeric row may be on the same extracted line.
-        let m = line.match(/^(.*?)\s+(\d+)\s+\$([\d,]+\.\d{2})\s+\$([\d,]+\.\d{2})$/);
-        if (m) {
-          const descPrefix = m[1].trim();
-          const description = [...buffer, descPrefix].filter(Boolean).join(' ').trim();
-          current = { description, qty:Number(m[2]), unitPrice:Number(m[3].replace(/,/g,'')), amount:Number(m[4].replace(/,/g,'')), tax:0, discount:0 };
-          items.push(current); buffer=[]; continue;
+          // Some PDFs separate the right-aligned price from the item-start row.
+          m = line.match(/^(\d+)\s+of:\s*(.*)$/i);
+          if (m) {
+            current = { description:m[2].trim(), qty:Number(m[1]), unitPrice:0, amount:0, tax:0, discount:0 };
+            items.push(current);
+            continue;
+          }
+          if (current && !current.unitPrice) {
+            m = line.match(/^\$([\d,]+\.\d{2})$/);
+            if (m) {
+              current.unitPrice = Number(m[1].replace(/,/g,''));
+              current.amount = +(current.qty * current.unitPrice).toFixed(2);
+              continue;
+            }
+          }
+
+          // Continue wrapped product descriptions, but stop before seller/shipping/payment metadata.
+          if (current && !stopDescription.test(line) && !/^[-]+$/.test(line) && !/^\$[\d,]+\.\d{2}$/.test(line)) {
+            current.description += ` ${line}`;
+          }
         }
 
-        // Numeric row beneath one or more description lines.
-        m = line.match(/^(\d+)\s+\$([\d,]+\.\d{2})\s+\$([\d,]+\.\d{2})$/);
-        if (m && buffer.length) {
-          current = { description:buffer.join(' ').trim(), qty:Number(m[1]), unitPrice:Number(m[2].replace(/,/g,'')), amount:Number(m[3].replace(/,/g,'')), tax:0, discount:0 };
-          items.push(current); buffer=[]; continue;
-        }
+        // Remove any incomplete item that could not obtain a price.
+        for (let i=items.length-1; i>=0; i--) if (!items[i].unitPrice || !items[i].description) items.splice(i,1);
+        allocateTax(items, aggregateTax);
+      } else {
+        let buffer = [];
+        let current = null;
+        const skip = line => {
+          const s = line.trim();
+          return !s ||
+            /^Description\b/i.test(s) || /^Quantity\b/i.test(s) || /^Unit Price\b/i.test(s) ||
+            /^Card Used\b/i.test(s) || /^Order Number\b/i.test(s) || /^PO Number\b/i.test(s) ||
+            /^Visa\s*\(/i.test(s) || /^Unit Supplies\b/i.test(s) || /^Cost center:/i.test(s) ||
+            /^Location:/i.test(s) || /^Taxes:/i.test(s) || /^Total:/i.test(s) ||
+            /^\$[\d,]+\.\d{2}$/.test(s) || /^\d{3}-\d{7}-\d{7}$/.test(s) ||
+            /^(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s+\d{4}/i.test(s);
+        };
 
-        if (!skip(line)) buffer.push(line);
+        for (const raw of lines) {
+          const line = raw.replace(/\s+/g,' ').trim();
+          if (!line) continue;
+          const tax = line.match(/^Tax\s+\$([\d,]+\.\d{2})$/i);
+          if (tax && current) { current.tax = Number(tax[1].replace(/,/g,'')); continue; }
+          const discount = line.match(/^Discount\s+-?\$([\d,]+\.\d{2})$/i);
+          if (discount && current) { current.discount = Number(discount[1].replace(/,/g,'')); continue; }
+
+          let m = line.match(/^(.*?)\s+(\d+)\s+\$([\d,]+\.\d{2})\s+\$([\d,]+\.\d{2})$/);
+          if (m) {
+            const description = [...buffer, m[1].trim()].filter(Boolean).join(' ').trim();
+            current = { description, qty:Number(m[2]), unitPrice:Number(m[3].replace(/,/g,'')), amount:Number(m[4].replace(/,/g,'')), tax:0, discount:0 };
+            items.push(current); buffer=[]; continue;
+          }
+          m = line.match(/^(\d+)\s+\$([\d,]+\.\d{2})\s+\$([\d,]+\.\d{2})$/);
+          if (m && buffer.length) {
+            current = { description:buffer.join(' ').trim(), qty:Number(m[1]), unitPrice:Number(m[2].replace(/,/g,'')), amount:Number(m[3].replace(/,/g,'')), tax:0, discount:0 };
+            items.push(current); buffer=[]; continue;
+          }
+          if (!skip(line)) buffer.push(line);
+        }
       }
 
       for (const item of items) {
-        item.lineTotal = +(item.amount + item.tax).toFixed(2); // Amazon's Amount already reflects the discount.
+        item.description = item.description.replace(/\s+/g,' ').trim();
+        item.lineTotal = +(item.amount + item.tax).toFixed(2);
         const coded = classify(item.description);
         item.category = coded.category;
         item.memo = coded.memo;
       }
-      return { orderNumber, orderDate: dateMatch ? dateMatch[0] : '—', total, items };
+      return { orderNumber, orderDate: dateMatch ? dateMatch[0] : '—', total: orderTotal || rampTotal, items };
     }
 
     function render() {
