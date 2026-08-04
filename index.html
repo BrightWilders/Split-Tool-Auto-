@@ -1,722 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Amazon PDF Splitter</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs" type="module"></script>
-  <style>
-    :root {
-      --navy: #12384a;
-      --teal: #0b7894;
-      --teal-dark: #075f76;
-      --page: #eef3f6;
-      --card: #ffffff;
-      --line: #d8e1e6;
-      --soft: #f6f9fa;
-      --text: #17242b;
-      --muted: #667780;
-      --warning: #9a5d00;
-      --danger: #a63333;
-      --success: #1d6f4a;
-    }
-
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: var(--page);
-      color: var(--text);
-      font-family: "Segoe UI", Arial, sans-serif;
-      font-size: 14px;
-    }
-
-    .page { max-width: 1120px; margin: 0 auto; padding: 26px 18px 48px; }
-
-    .hero {
-      background: var(--navy);
-      color: white;
-      border-radius: 12px 12px 0 0;
-      padding: 18px 22px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-    }
-    .hero h1 { margin: 0; font-size: 22px; letter-spacing: .1px; }
-    .hero p { margin: 4px 0 0; opacity: .84; font-size: 13px; }
-
-    .app-shell {
-      background: var(--card);
-      border-radius: 0 0 12px 12px;
-      box-shadow: 0 8px 28px rgba(30, 62, 78, .11);
-      overflow: hidden;
-    }
-
-    .upload-wrap { padding: 18px 22px; border-bottom: 1px solid var(--line); }
-    .upload-card {
-      max-width: 560px;
-      margin: 0 auto;
-      border: 1px solid var(--line);
-      background: #f8fbfc;
-      border-radius: 10px;
-      padding: 18px;
-      text-align: center;
-    }
-    .upload-title { font-weight: 800; color: var(--navy); font-size: 16px; margin-bottom: 5px; }
-    .upload-help { color: var(--muted); font-size: 13px; margin-bottom: 13px; }
-    .drop-zone {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      min-width: 160px;
-      border: 0;
-      background: var(--teal);
-      color: white;
-      border-radius: 7px;
-      padding: 10px 15px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: .18s ease;
-    }
-    .drop-zone:hover, .drop-zone.drag { background: var(--teal-dark); }
-    .drop-zone input { display: none; }
-    .drop-hint { margin-top: 9px; color: var(--muted); font-size: 12px; }
-
-    .loaded-bar {
-      display: none;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      border: 1px solid var(--line);
-      background: #f8fbfc;
-      border-radius: 9px;
-      padding: 11px 13px;
-    }
-    .loaded-main { min-width: 0; }
-    .loaded-name { color: var(--navy); font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .loaded-meta { color: var(--muted); font-size: 12px; margin-top: 3px; }
-    .change-btn { flex: 0 0 auto; }
-
-    .status { display: none; margin-top: 12px; padding: 10px 12px; border-radius: 7px; background: var(--soft); color: var(--muted); }
-    .status.error { display: block; color: var(--danger); background: #fff2f2; }
-    .status.info { display: block; color: var(--navy); }
-
-    .content { display: none; padding: 22px; }
-    .order-strip {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-      margin-bottom: 22px;
-    }
-    .meta {
-      background: var(--soft);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 10px 12px;
-    }
-    .meta-label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
-    .meta-value { margin-top: 3px; font-weight: 700; font-size: 14px; overflow-wrap: anywhere; }
-
-    .section-title {
-      margin: 0 0 10px;
-      font-size: 17px;
-      color: var(--navy);
-    }
-
-    .summary-card { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
-    table { width: 100%; border-collapse: collapse; }
-    th {
-      text-align: left;
-      padding: 10px 12px;
-      background: #edf3f5;
-      color: var(--navy);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: .35px;
-    }
-    td { padding: 10px 12px; border-top: 1px solid var(--line); vertical-align: middle; }
-    td.amount, th.amount { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
-    .summary-total td { font-weight: 800; background: #f8fafb; font-size: 15px; }
-
-    select, input[type="text"] {
-      width: 100%;
-      min-width: 0;
-      border: 1px solid #cbd7dc;
-      border-radius: 6px;
-      background: white;
-      padding: 7px 8px;
-      color: var(--text);
-      font: inherit;
-    }
-    select:focus, input:focus { outline: 2px solid rgba(11,120,148,.18); border-color: var(--teal); }
-
-    .actions { display: flex; gap: 9px; flex-wrap: wrap; margin: 14px 0 20px; }
-    button {
-      border: 0;
-      border-radius: 7px;
-      padding: 9px 13px;
-      font: inherit;
-      font-weight: 700;
-      cursor: pointer;
-      background: var(--teal);
-      color: white;
-    }
-    button:hover { background: var(--teal-dark); }
-    button.secondary { background: #e8eef1; color: var(--navy); }
-    button.secondary:hover { background: #dce6ea; }
-
-    details {
-      border: 1px solid var(--line);
-      border-radius: 9px;
-      overflow: hidden;
-      background: white;
-    }
-    summary {
-      list-style: none;
-      cursor: pointer;
-      padding: 13px 15px;
-      font-weight: 750;
-      color: var(--navy);
-      background: #f4f7f8;
-    }
-    summary::-webkit-details-marker { display: none; }
-    summary::before { content: "▸"; display: inline-block; margin-right: 8px; transition: transform .15s; }
-    details[open] summary::before { transform: rotate(90deg); }
-
-    .lines-wrap { overflow-x: auto; }
-    .lines-table { min-width: 900px; }
-    .desc { max-width: 360px; line-height: 1.35; }
-    .line-sub { color: var(--muted); font-size: 12px; margin-top: 3px; }
-    .uncoded { background: #fff4df; }
-    .review-required { color: var(--warning); font-weight: 800; }
-    .review-note { color: var(--warning); font-size: 12px; font-weight: 700; margin-top: 3px; }
-    .line-amount { font-weight: 700; white-space: nowrap; text-align: right; }
-
-    .empty-summary { padding: 22px; color: var(--muted); text-align: center; }
-    .small-note { color: var(--muted); font-size: 12px; margin-top: 8px; }
-
-    @media (max-width: 760px) {
-      .order-strip { grid-template-columns: 1fr; }
-      .hero { align-items: flex-start; flex-direction: column; }
-      .content, .upload-wrap { padding: 16px; }
-      .loaded-bar { align-items: flex-start; }
-      .loaded-name { white-space: normal; }
-      .summary-card { overflow-x: auto; }
-      .summary-card table { min-width: 650px; }
-    }
-
-    @media (max-width: 520px) {
-      .upload-card { padding: 16px 13px; }
-      .loaded-bar { flex-direction: column; }
-      .change-btn { width: 100%; }
-    }
-
-    @media print {
-      body { background: white; }
-      .page { max-width: none; padding: 0; }
-      .hero { border-radius: 0; padding: 14px 18px; }
-      .app-shell { box-shadow: none; }
-      .upload-wrap, .actions, details { display: none !important; }
-      .content { display: block !important; padding: 18px; }
-      select, input[type="text"] { border: 0; padding: 0; appearance: none; }
-      .summary-card { break-inside: avoid; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Amazon PDF Splitter</title>
+<style>
+:root{--navy:#12384a;--teal:#0b7894;--teal-dark:#075f76;--bg:#eef3f6;--line:#d7e1e6;--soft:#f5f8fa;--text:#17242b;--muted:#657780;--warn:#a86200;--danger:#a63333;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px "Segoe UI",Arial,sans-serif}.page{max-width:1180px;margin:auto;padding:26px 18px 52px}.hero{background:var(--navy);color:#fff;padding:18px 22px;border-radius:12px 12px 0 0}.hero h1{margin:0;font-size:22px}.hero p{margin:5px 0 0;opacity:.85}.shell{background:#fff;border-radius:0 0 12px 12px;box-shadow:0 8px 28px rgba(30,62,78,.11);overflow:hidden}.setup{padding:20px 22px;border-bottom:1px solid var(--line)}.step-title{font-weight:800;color:var(--navy);margin-bottom:10px}.profiles{display:grid;grid-template-columns:repeat(5,minmax(130px,1fr));gap:10px;margin-bottom:16px}.profile{border:1px solid var(--line);background:#fff;color:var(--navy);padding:12px 10px;border-radius:9px;font-weight:750;cursor:pointer}.profile:hover{background:#f3f7f8}.profile.active{background:var(--navy);color:#fff;border-color:var(--navy)}.upload-card{max-width:630px;margin:auto;border:1px solid var(--line);background:#f8fbfc;border-radius:10px;padding:18px;text-align:center}.upload-title{font-size:16px;font-weight:800;color:var(--navy)}.upload-help{color:var(--muted);margin:5px 0 13px}.choose{display:inline-flex;min-width:165px;align-items:center;justify-content:center;background:var(--teal);color:#fff;padding:10px 16px;border-radius:7px;font-weight:800;cursor:pointer}.choose:hover,.choose.drag{background:var(--teal-dark)}.choose input{display:none}.hint{font-size:12px;color:var(--muted);margin-top:9px}.loaded{display:none;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--line);background:#f8fbfc;border-radius:9px;padding:11px 13px}.loaded-name{font-weight:800;color:var(--navy)}.loaded-meta{font-size:12px;color:var(--muted);margin-top:3px}.status{display:none;margin-top:12px;padding:10px 12px;border-radius:7px;background:var(--soft);color:var(--muted)}.status.show{display:block}.status.error{background:#fff2f2;color:var(--danger)}.content{display:none;padding:22px}.order-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:22px}.meta{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 12px}.meta-label{text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-size:11px}.meta-value{font-weight:750;margin-top:3px}.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}.section-title{margin:0;font-size:18px;color:var(--navy)}.summary-wrap{display:flex;flex-direction:column;gap:12px}.group{border:1px solid var(--line);border-radius:10px;overflow:hidden}.group.review-group{border-color:#e3b56e}.group-head{display:flex;justify-content:space-between;gap:12px;padding:11px 13px;background:#edf3f5;color:var(--navy);font-weight:800}.review-group .group-head{background:#fff4df;color:var(--warn)}.group table{width:100%;border-collapse:collapse}.group td{padding:9px 13px;border-top:1px solid var(--line)}.amount{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}.transaction-total{display:flex;justify-content:space-between;padding:13px 15px;background:var(--navy);color:#fff;border-radius:9px;font-size:16px;font-weight:800}.actions{display:flex;gap:9px;flex-wrap:wrap;margin:14px 0 20px}button{border:0;border-radius:7px;padding:9px 13px;font:inherit;font-weight:750;cursor:pointer;background:var(--teal);color:#fff}button:hover{background:var(--teal-dark)}button.secondary{background:#e8eef1;color:var(--navy)}button.ghost{background:#fff;color:var(--navy);border:1px solid var(--line)}details{border:1px solid var(--line);border-radius:9px;overflow:hidden;background:#fff}summary{list-style:none;cursor:pointer;padding:13px 15px;font-weight:800;color:var(--navy);background:#f4f7f8}summary::-webkit-details-marker{display:none}summary:before{content:"▸";display:inline-block;margin-right:8px;transition:.15s}details[open] summary:before{transform:rotate(90deg)}.lines-wrap{overflow-x:auto}.lines-table{width:100%;min-width:920px;border-collapse:collapse}.lines-table th{text-align:left;padding:10px 12px;background:#edf3f5;color:var(--navy);font-size:12px;text-transform:uppercase}.lines-table td{padding:10px 12px;border-top:1px solid var(--line);vertical-align:middle}.desc{max-width:450px;line-height:1.35}.sub{font-size:12px;color:var(--muted);margin-top:4px}.uncoded{background:#fff7e9}.review-note{font-size:12px;color:var(--warn);font-weight:800;margin-top:4px}select,input[type=text]{width:100%;border:1px solid #cbd7dc;border-radius:6px;padding:7px 8px;background:#fff;color:var(--text);font:inherit}.empty{padding:22px;text-align:center;color:var(--muted);border:1px solid var(--line);border-radius:9px}.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(10,28,37,.55);z-index:20;padding:24px;overflow:auto}.modal-backdrop.show{display:block}.modal{max-width:900px;margin:20px auto;background:#fff;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.25);overflow:hidden}.modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--navy);color:#fff;padding:15px 18px}.modal-head h2{margin:0;font-size:18px}.modal-body{padding:18px}.manager-top{display:grid;grid-template-columns:220px 1fr;gap:12px;margin-bottom:16px}.manager-list{display:flex;flex-direction:column;gap:7px}.manager-cat{background:#fff;color:var(--navy);border:1px solid var(--line);text-align:left}.manager-cat.active{background:var(--navy);color:#fff}.rule-card{border:1px solid var(--line);border-radius:9px;padding:14px;background:#fbfcfd}.rule-card h3{margin:0 0 5px;color:var(--navy)}.rule-code{font-size:12px;color:var(--muted);margin-bottom:12px}.keyword-list{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}.keyword{display:inline-flex;align-items:center;gap:6px;background:#eaf1f4;border:1px solid #d2e0e6;border-radius:999px;padding:5px 8px}.keyword button{padding:0;background:transparent;color:var(--danger);font-size:15px}.add-keyword{display:flex;gap:8px}.add-keyword input{flex:1}.manager-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}.close-x{background:transparent;padding:3px 7px;font-size:20px}.close-x:hover{background:rgba(255,255,255,.15)}
+@media(max-width:900px){.profiles{grid-template-columns:repeat(2,1fr)}.manager-top{grid-template-columns:1fr}.manager-list{display:grid;grid-template-columns:repeat(2,1fr)}}@media(max-width:700px){.page{padding:0}.hero{border-radius:0}.shell{border-radius:0}.profiles{grid-template-columns:1fr}.order-strip{grid-template-columns:1fr}.content,.setup{padding:16px}.loaded,.group-head{align-items:flex-start;flex-direction:column}.section-head{align-items:flex-start;flex-direction:column}}@media print{body{background:#fff}.page{max-width:none;padding:0}.hero{border-radius:0}.shell{box-shadow:none}.setup,.actions,details,.section-head button{display:none!important}.content{display:block!important;padding:18px}.group{break-inside:avoid}.transaction-total{background:#fff;color:#000;border:2px solid #000}.modal-backdrop{display:none!important}}
+</style>
 </head>
 <body>
-  <div class="page">
-    <div class="hero">
-      <div>
-        <h1>Amazon PDF Splitter</h1>
-        <p>Upload an Amazon Business PDF and get the split amounts to enter in Ramp.</p>
+<div class="page">
+  <header class="hero"><h1>Amazon PDF Splitter</h1><p>Choose the purchasing category, upload the Amazon PDF, and use the grouped Ramp split.</p></header>
+  <div class="shell">
+    <section class="setup">
+      <div class="step-title">1. Choose Purchasing Category</div>
+      <div class="profiles" id="profileRow">
+        <button class="profile active" data-profile="gsc">📦 GSC</button>
+        <button class="profile" data-profile="unit">🏠 Unit Supplies</button>
+        <button class="profile" data-profile="fb">🍽️ F&amp;B</button>
+        <button class="profile" data-profile="linen">🛏️ Linen</button>
+        <button class="profile" data-profile="hsk">🧹 HSK Supplies</button>
       </div>
-    </div>
-
-    <div class="app-shell">
-      <div class="upload-wrap">
-        <div class="upload-card" id="uploadCard">
-          <div class="upload-title">Upload Amazon Business PDF</div>
-          <div class="upload-help">Choose the receipt you want split for Ramp.</div>
-          <label class="drop-zone" id="dropZone">
-            <input type="file" id="pdfInput" accept="application/pdf,.pdf" />
-            <span>Choose PDF</span>
-          </label>
-          <div class="drop-hint">You can also drag and drop the PDF here.</div>
-        </div>
-
-        <div class="loaded-bar" id="loadedBar">
-          <div class="loaded-main">
-            <div class="loaded-name" id="loadedFileName">Amazon Business PDF</div>
-            <div class="loaded-meta" id="loadedFileMeta">Ready</div>
-          </div>
-          <button class="secondary change-btn" id="changePdfBtn">Change PDF</button>
-        </div>
-        <div id="status" class="status"></div>
+      <div class="step-title">2. Upload Amazon PDF</div>
+      <div class="upload-card" id="uploadCard">
+        <div class="upload-title">Upload Amazon Receipt or Order Details PDF</div>
+        <div class="upload-help" id="profileHelp">GSC – Guest Stay Consumables selected.</div>
+        <label class="choose" id="dropZone"><input id="pdfInput" type="file" accept="application/pdf,.pdf"><span>Choose PDF</span></label>
+        <div class="hint">You can also drag and drop the PDF here.</div>
       </div>
+      <div class="loaded" id="loadedBar"><div><div class="loaded-name" id="loadedName"></div><div class="loaded-meta" id="loadedMeta"></div></div><button class="secondary" id="changeBtn">Change PDF</button></div>
+      <div class="status" id="status"></div>
+    </section>
 
-      <main class="content" id="content">
-        <div class="order-strip">
-          <div class="meta"><div class="meta-label">Order Number</div><div class="meta-value" id="orderNumber">—</div></div>
-          <div class="meta"><div class="meta-label">Order Date</div><div class="meta-value" id="orderDate">—</div></div>
-          <div class="meta"><div class="meta-label">Transaction Total</div><div class="meta-value" id="transactionTotal">$0.00</div></div>
-        </div>
+    <main class="content" id="content">
+      <div class="order-strip">
+        <div class="meta"><div class="meta-label">Order Number</div><div class="meta-value" id="orderNumber">—</div></div>
+        <div class="meta"><div class="meta-label">Order Date</div><div class="meta-value" id="orderDate">—</div></div>
+        <div class="meta"><div class="meta-label">Transaction Total</div><div class="meta-value" id="transactionTotal">$0.00</div></div>
+      </div>
+      <div class="section-head"><h2 class="section-title">Ramp Split</h2><button class="ghost" id="managerBtn">⚙ Manage Keywords</button></div>
+      <div class="summary-wrap" id="summaryWrap"></div>
+      <div class="actions"><button id="copyBtn">Copy Ramp Split</button><button id="printBtn">Print PDF</button><button class="secondary" id="newBtn">Upload New PDF</button></div>
+      <details id="reviewDetails"><summary>Review or Correct Extracted Purchase Lines</summary><div class="lines-wrap"><table class="lines-table"><thead><tr><th>Description</th><th style="width:300px">Coding</th><th style="width:190px">Memo</th><th class="amount" style="width:115px">Amount</th></tr></thead><tbody id="linesBody"></tbody></table></div></details>
+    </main>
+  </div>
+</div>
 
-        <h2 class="section-title">Ramp Split</h2>
-        <div class="summary-card">
-          <table>
-            <thead>
-              <tr><th style="width:48%">Ramp Item</th><th>Memo</th><th class="amount">Split Amount</th></tr>
-            </thead>
-            <tbody id="summaryBody"></tbody>
-          </table>
-        </div>
-
-        <div class="actions">
-          <button id="copyBtn">Copy Ramp Split</button>
-          <button id="printBtn">Print PDF</button>
-          <button class="secondary" id="newBtn">Upload New PDF</button>
-        </div>
-
-        <details id="reviewDetails">
-          <summary>Review or Correct Extracted Purchase Lines</summary>
-          <div class="lines-wrap">
-            <table class="lines-table">
-              <thead>
-                <tr>
-                  <th>Description</th>
-                  <th style="width:250px">Ramp Item</th>
-                  <th style="width:160px">Memo</th>
-                  <th class="amount" style="width:110px">Amount</th>
-                </tr>
-              </thead>
-              <tbody id="linesBody"></tbody>
-            </table>
-          </div>
-        </details>
-      </main>
+<div class="modal-backdrop" id="managerModal">
+  <div class="modal">
+    <div class="modal-head"><h2>Keyword Manager</h2><button class="close-x" id="closeManager" aria-label="Close">×</button></div>
+    <div class="modal-body">
+      <div class="manager-top">
+        <div><label><strong>Purchasing Category</strong></label><select id="managerProfile"></select></div>
+        <div><strong>How it works</strong><div class="sub">Add product words or phrases that should map to each coding option. Changes are saved in this browser.</div></div>
+      </div>
+      <div class="manager-top">
+        <div class="manager-list" id="managerCategoryList"></div>
+        <div class="rule-card" id="managerEditor"></div>
+      </div>
+      <div class="manager-actions"><button class="secondary" id="resetKeywords">Restore Default Keywords</button><button id="doneManager">Done</button></div>
     </div>
   </div>
+</div>
 
-  <script type="module">
-    import * as pdfjsLib from 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs';
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
+<script type="module">
+import * as pdfjsLib from 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs';
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
 
-    const CATEGORIES = [
-      ['GSC - Guest Stay Consumables', [
-        'GS-Coffee/Coffee Supplies','GS-Paper Towels','GS-Toiletries-Soap/Shampoo/Lotion',
-        'GS-Laundry Supplies - Guest Use','GS-Trash Can Liners','GS-Tissues',
-        'GS-Kitchen Supplies (dish soap/detergent, sponges)','GS-Toilet Paper','GS-Water bottles',
-        'GS-Owner stay Fee','GS-Comp stays','GS-Spices'
-      ]],
-      ['US - Unit Supplies', [
-        'US-Unit Bedroom Supplies','US-Unit Bathroom Supplies','US-Unit Kitchen Supplies',
-        'US-Unit Miscellaneous Supplies','US-Unit OnBoarding Supplies','US-Keurig',
-        'US-Point Central Locks/Thermostats','US-Exterior/Common Area','US-Furniture'
-      ]],
-      ['F&B - Food & Beverage', [
-        'F&B-Mixers Purchases','F&B-Miscellaneous Purchases','F&B-Paper, Plastic & Disposables','F&B-Glassware & Utensils'
-      ]],
-      ['Linen', [
-        'Linen - Sheets','Linen - Mattress Pads','Linen - Pillow Protectors','Linen - Shower Curtains',
-        'Linen - Bath Towels & Washcloths','Linen - Blankets','Linen - Duvets','Linen - Pool Towels',
-        'Linen - Pillows','Linen - 3rd Party Purchased','Linen - Bedskirts','Linen - Other','Linen - Kitchen Towels'
-      ]]
-    ];
+const $=id=>document.getElementById(id);
+const money=n=>`$${Number(n||0).toFixed(2)}`;
+const normalize=s=>(s||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').replace(/\s+/g,' ').trim();
+const esc=s=>(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 
-    const MEMOS = {
-      'GS-Coffee/Coffee Supplies':'Coffee Supplies',
-      'GS-Paper Towels':'Paper Towels',
-      'GS-Toiletries-Soap/Shampoo/Lotion':'Toiletries',
-      'GS-Laundry Supplies - Guest Use':'Laundry Detergent',
-      'GS-Trash Can Liners':'Trash Bags',
-      'GS-Tissues':'Tissues',
-      'GS-Kitchen Supplies (dish soap/detergent, sponges)':'Kitchen Supplies',
-      'GS-Toilet Paper':'Toilet Paper',
-      'GS-Water bottles':'Water',
-      'GS-Owner stay Fee':'Owner Stay Fee',
-      'GS-Comp stays':'Comp Stays',
-      'GS-Spices':'Spices',
-      'US-Unit Bedroom Supplies':'Bedroom Supplies',
-      'US-Unit Bathroom Supplies':'Bathroom Supplies',
-      'US-Unit Kitchen Supplies':'Kitchen Supplies',
-      'US-Unit Miscellaneous Supplies':'Unit Supplies',
-      'US-Unit OnBoarding Supplies':'Onboarding Supplies',
-      'US-Keurig':'Keurig',
-      'US-Point Central Locks/Thermostats':'Locks/Thermostats',
-      'US-Exterior/Common Area':'Exterior/Common Area',
-      'US-Furniture':'Furniture',
-      'F&B-Mixers Purchases':'Mixers',
-      'F&B-Miscellaneous Purchases':'F&B Supplies',
-      'F&B-Paper, Plastic & Disposables':'Disposables',
-      'F&B-Glassware & Utensils':'Glassware & Utensils',
-      'Linen - Sheets':'Sheets','Linen - Mattress Pads':'Mattress Pads','Linen - Pillow Protectors':'Pillow Protectors',
-      'Linen - Shower Curtains':'Shower Curtains','Linen - Bath Towels & Washcloths':'Bath Towels & Washcloths',
-      'Linen - Blankets':'Blankets','Linen - Duvets':'Duvets','Linen - Pool Towels':'Pool Towels',
-      'Linen - Pillows':'Pillows','Linen - 3rd Party Purchased':'Linen','Linen - Bedskirts':'Bedskirts',
-      'Linen - Other':'Linen','Linen - Kitchen Towels':'Kitchen Towels'
-    };
+const PROFILE_META={
+  gsc:{name:'GSC – Guest Stay Consumables',short:'GSC'},
+  unit:{name:'Unit Supplies',short:'Unit Supplies'},
+  fb:{name:'F&B – Food & Beverage',short:'F&B'},
+  linen:{name:'Linen',short:'Linen'},
+  hsk:{name:'HSK Supplies',short:'HSK Supplies'}
+};
 
-    let purchaseLines = [];
-    let receiptTotal = 0;
+const PROFILE_OPTIONS={
+ gsc:[
+  {code:'GS-Coffee/Coffee Supplies',memo:'Coffee Supplies',keywords:['coffee','keurig pod','k cup','creamer','sweetener']},
+  {code:'GS-Paper Towels',memo:'Paper Towels',keywords:['paper towel','bounty quick size','bounty paper towels']},
+  {code:'GS-Toiletries-Soap/Shampoo/Lotion',memo:'Toiletries',keywords:['shampoo','conditioner','body wash','body lotion','hand soap','bar soap','toiletries']},
+  {code:'GS-Laundry Supplies - Guest Use',memo:'Laundry Supplies',keywords:['guest laundry','laundry detergent pacs','laundry pods','dryer sheets']},
+  {code:'GS-Trash Can Liners',memo:'Trash Bags',keywords:['trash bag','trash can liner','garbage bag']},
+  {code:'GS-Tissues',memo:'Tissues',keywords:['facial tissue','kleenex','tissues']},
+  {code:'GS-Kitchen Supplies (dish soap/detergent, sponges)',memo:'Kitchen Supplies',keywords:['dish soap','dishwasher detergent','dishwasher pod','sponge','scrub sponge']},
+  {code:'GS-Toilet Paper',memo:'Toilet Paper',keywords:['toilet paper','charmin']},
+  {code:'GS-Water bottles',memo:'Water Bottles',keywords:['bottled water','water bottles']},
+  {code:'GS-Owner stay Fee',memo:'Owner Stay Fee',keywords:[]},
+  {code:'GS-Comp stays',memo:'Comp Stays',keywords:[]},
+  {code:'GS-Spices',memo:'Spices',keywords:['spice','seasoning','salt packets','pepper packets']}
+ ],
+ unit:[
+  {code:'US-Unit Bedroom Supplies',memo:'Bedroom Supplies',keywords:['nightstand','bedroom lamp','alarm clock','hanger','luggage rack']},
+  {code:'US-Unit Bathroom Supplies',memo:'Bathroom Supplies',keywords:['bathroom organizer','toilet brush','shower caddy','bath mat']},
+  {code:'US-Unit Kitchen Supplies',memo:'Kitchen Supplies',keywords:['cookware','frying pan','pot set','cutting board','kitchen utensil','silverware','flatware']},
+  {code:'US-Unit Miscellaneous Supplies',memo:'Miscellaneous Unit Supplies',keywords:[]},
+  {code:'US-Unit OnBoarding Supplies',memo:'Onboarding Supplies',keywords:['onboarding supplies','unit onboarding']},
+  {code:'US-Keurig',memo:'Keurig',keywords:['keurig coffee maker','keurig machine']},
+  {code:'US-Point Central Locks/Thermostats',memo:'PointCentral Equipment',keywords:['pointcentral','smart lock','door lock','thermostat']},
+  {code:'US-Exterior/Common Area',memo:'Exterior/Common Area',keywords:['outdoor furniture','patio','pool furniture','common area']},
+  {code:'US-Furniture',memo:'Furniture',keywords:['chair','sofa','couch','table','dresser','nightstand','bed frame','headboard']}
+ ],
+ fb:[
+  {code:'F&B-Mixers Purchases',memo:'Mixers',keywords:['mixer','syrup','tonic water','club soda','grenadine']},
+  {code:'F&B-Miscellaneous Purchases',memo:'F&B Miscellaneous',keywords:[]},
+  {code:'F&B-Paper, Plastic & Disposables',memo:'Paper, Plastic & Disposables',keywords:['straw','napkin','paper plate','plastic cup','to go container','disposable']},
+  {code:'F&B-Glassware & Utensils',memo:'Glassware & Utensils',keywords:['wine glass','cocktail glass','glassware','bar spoon','utensil','silverware']}
+ ],
+ linen:[
+  {code:'Linen - Sheets',memo:'Sheets',keywords:['sheet set','flat sheet','fitted sheet','bed sheet','percale']},
+  {code:'Linen - Mattress Pads',memo:'Mattress Pads',keywords:['mattress protector','mattress pad','mattress encasement']},
+  {code:'Linen - Pillow Protectors',memo:'Pillow Protectors',keywords:['pillow protector','pillow encasement']},
+  {code:'Linen - Shower Curtains',memo:'Shower Curtains',keywords:['shower curtain','shower liner']},
+  {code:'Linen - Bath Towels & Washcloths',memo:'Bath Towels & Washcloths',keywords:['bath towel','washcloth','hand towel']},
+  {code:'Linen - Blankets',memo:'Blankets',keywords:['blanket','throw blanket']},
+  {code:'Linen - Duvets',memo:'Duvets',keywords:['duvet','duvet insert','duvet cover']},
+  {code:'Linen - Pool Towels',memo:'Pool Towels',keywords:['pool towel','beach towel']},
+  {code:'Linen - Pillows',memo:'Pillows',keywords:['bed pillow','sleeping pillow']},
+  {code:'Linen - 3rd Party Purchased',memo:'3rd Party Purchased Linen',keywords:[]},
+  {code:'Linen - Bedskirts',memo:'Bedskirts',keywords:['bed skirt','bedskirt']},
+  {code:'Linen - Other',memo:'Other Linen',keywords:[]},
+  {code:'Linen - Kitchen Towels',memo:'Kitchen Towels',keywords:['kitchen towel','dish towel','tea towel']}
+ ],
+ hsk:[
+  {code:'7700 - 310 - Housekeeping Operations',memo:'Housekeeping Tool',keywords:['tub hose','faucet sprayer','rinseroo','hair remover tool','drain hair remover','sink hair remover','moth trap','moth traps','extension cord','knee pad','knee pads','cleaning caddy','utility bucket','mop handle','squeegee','dustpan','duster','scrub brush','cleaning brush']},
+  {code:'7704 - 310 - Supplies - Cleaning',memo:'Cleaning Supplies',keywords:['cleaner','disinfectant','magic eraser','melamine sponge','cleaning pad','clorox clean up','bleach spray','glass cleaner','bathroom cleaner','all purpose cleaner','trash bag','garbage bag','mop head','sponge']},
+  {code:'7705 - 311 - Supplies - Laundry',memo:'Laundry Supplies',keywords:['laundry','stain remover','whitener','detergent','fabric softener','dryer sheet','oxiclean']}
+ ]
+};
 
-    const $ = id => document.getElementById(id);
-    const money = n => `$${Number(n || 0).toFixed(2)}`;
-    const normalize = s => (s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+const DEFAULT_RULES=JSON.parse(JSON.stringify(PROFILE_OPTIONS));
+const STORAGE_KEY='amazonPdfSplitterKeywordRulesV2';
+let profile='gsc', purchaseLines=[], receiptTotal=0, currentFile=null, rules=loadRules(), managerSelectedCode='';
 
-    function categoryOptions(selected='') {
-      let html = '<option value="">Review Required</option>';
-      for (const [group, items] of CATEGORIES) {
-        html += `<optgroup label="${escapeHtml(group)}">`;
-        for (const item of items) html += `<option ${item===selected?'selected':''}>${escapeHtml(item)}</option>`;
-        html += '</optgroup>';
-      }
-      return html;
-    }
+function loadRules(){try{const saved=JSON.parse(localStorage.getItem(STORAGE_KEY));if(saved&&typeof saved==='object'){const merged=JSON.parse(JSON.stringify(PROFILE_OPTIONS));for(const p of Object.keys(merged)){if(Array.isArray(saved[p])){for(const opt of merged[p]){const prior=saved[p].find(x=>x.code===opt.code);if(prior&&Array.isArray(prior.keywords))opt.keywords=prior.keywords}}}return merged}}catch{}return JSON.parse(JSON.stringify(PROFILE_OPTIONS))}
+function saveRules(){localStorage.setItem(STORAGE_KEY,JSON.stringify(rules))}
+function profileOptions(p=profile){return PROFILE_OPTIONS[p]}
+function profileRules(p=profile){return rules[p]}
+function optionByCode(code,p=profile){return profileOptions(p).find(x=>x.code===code)}
+function suggestMemo(description,code,defaultMemo=''){
+ const text=normalize(description);
+ if(profile==='hsk'){
+  const checks=[
+   ['rinseroo','Bathtub Sprayer'],['tub hose','Bathtub Sprayer'],['faucet sprayer','Bathtub Sprayer'],
+   ['hair remover','Hair Remover Tool'],['drain snake','Hair Remover Tool'],
+   ['moth trap','Moth Traps'],['extension cord','Extension Cord'],['knee pad','Knee Pads'],
+   ['cleaning caddy','Cleaning Caddy'],['utility bucket','Utility Bucket'],['mop handle','Mop Handle'],
+   ['squeegee','Squeegee'],['dustpan','Dustpan'],['duster','Duster'],['scrub brush','Cleaning Brush'],
+   ['white revive','Laundry Whitener'],['whitener','Laundry Whitener'],['stain remover','Stain Remover'],
+   ['laundry detergent','Laundry Detergent'],['detergent pac','Laundry Detergent'],['fabric softener','Fabric Softener'],['dryer sheet','Dryer Sheets'],
+   ['magic eraser','Magic Erasers'],['melamine sponge','Magic Erasers'],['clorox clean up','Bleach Cleaner'],
+   ['bleach spray','Bleach Cleaner'],['glass cleaner','Glass Cleaner'],['bathroom cleaner','Bathroom Cleaner'],
+   ['disinfectant','Disinfectant Cleaner'],['all purpose cleaner','All Purpose Cleaner'],['trash bag','Trash Bags'],
+   ['garbage bag','Trash Bags'],['mop head','Mop Supplies'],['sponge','Cleaning Sponges']
+  ];
+  for(const [keyword,memo] of checks)if(text.includes(normalize(keyword)))return memo;
+ }
+ return defaultMemo;
+}
+function classify(description){const text=normalize(description), candidates=[];for(const rule of profileRules()){for(const keyword of rule.keywords||[]){const k=normalize(keyword);if(k&&text.includes(k))candidates.push({rule,score:k.length})}}if(!candidates.length)return{coding:'',memo:''};candidates.sort((a,b)=>b.score-a.score);const rule=candidates[0].rule;return{coding:rule.code,memo:suggestMemo(description,rule.code,rule.memo)}}
 
-    function escapeHtml(value='') {
-      return value.replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
-    }
+function codingOptions(selected=''){let html='<option value="">Review Required</option>';for(const opt of profileOptions())html+=`<option value="${esc(opt.code)}" ${selected===opt.code?'selected':''}>${esc(opt.code)}</option>`;return html}
 
-    function getSavedMapping(description) {
-      try { return JSON.parse(localStorage.getItem('amazonRampMapV2') || '{}')[normalize(description)] || null; }
-      catch { return null; }
-    }
+async function pageLines(page){const c=await page.getTextContent(),rows=[];for(const item of c.items){const text=(item.str||'').trim();if(!text)continue;const x=item.transform[4],y=item.transform[5];let row=rows.find(r=>Math.abs(r.y-y)<=2.5);if(!row){row={y,items:[]};rows.push(row)}row.items.push({x,text})}rows.sort((a,b)=>b.y-a.y);return rows.map(r=>r.items.sort((a,b)=>a.x-b.x).map(i=>i.text).join(' ').replace(/\s+/g,' ').trim())}
+function allocateTax(items,tax){let cents=Math.round((tax||0)*100),subtotal=items.reduce((s,x)=>s+x.amount,0);if(!items.length||!cents||!subtotal){items.forEach(x=>x.tax=0);return}const allocations=items.map((x,i)=>{const exact=cents*x.amount/subtotal,floor=Math.floor(exact);return{i,floor,remainder:exact-floor}});let used=allocations.reduce((s,x)=>s+x.floor,0);allocations.sort((a,b)=>b.remainder-a.remainder||a.i-b.i);for(let i=0;i<cents-used;i++)allocations[i].floor++;allocations.sort((a,b)=>a.i-b.i);allocations.forEach(x=>items[x.i].tax=x.floor/100)}
 
-    function saveMapping(description, category, memo) {
-      try {
-        const all = JSON.parse(localStorage.getItem('amazonRampMapV2') || '{}');
-        all[normalize(description)] = { category, memo };
-        localStorage.setItem('amazonRampMapV2', JSON.stringify(all));
-      } catch { /* local storage can be unavailable in strict modes */ }
-    }
+function parseAmazon(lines){
+ const joined=lines.join('\n');
+ const order=(joined.match(/\b\d{3}-\d{7}-\d{7}\b/)||[])[0]||'—';
+ const dateMatch=joined.match(/(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s+\d{4}/i);
+ const rampTotals=[...joined.matchAll(/(?:^|\s)Total:\s*\$([\d,]+\.\d{2})/gmi)];
+ const rampTotal=rampTotals.length?+rampTotals.at(-1)[1].replace(/,/g,''):0;
+ const orderTotalMatch=joined.match(/(?:Order Total|Grand Total):\s*\$([\d,]+\.\d{2})/i);
+ const orderTotal=orderTotalMatch?+orderTotalMatch[1].replace(/,/g,''):0;
+ const estimatedTax=joined.match(/Estimated Tax:\s*\$([\d,]+\.\d{2})/i);
+ const salesTaxes=[...joined.matchAll(/Sales Tax:\s*\$([\d,]+\.\d{2})/gi)];
+ const aggregateTax=estimatedTax?+estimatedTax[1].replace(/,/g,''):(salesTaxes.length?+salesTaxes.at(-1)[1].replace(/,/g,''):0);
+ const isOrderDetails=/Details for Order|Items Ordered/i.test(joined)&&/\d+\s+of:/i.test(joined);
+ const items=[];
 
-    function classify(description) {
-      const saved = getSavedMapping(description);
-      if (saved) return saved;
-      const d = normalize(description);
-      // Only classify when the description contains a clear product-type match.
-      // Brand names alone are intentionally not used because the tool should not guess.
-      const rules = [
-        [/\bpaper towels?\b/, 'GS-Paper Towels'],
-        [/\btoilet paper\b/, 'GS-Toilet Paper'],
-        [/\b(?:trash|garbage) bags?\b|\bcan liners?\b/, 'GS-Trash Can Liners'],
-        [/\blaundry detergent\b|\bdetergent pacs?\b|\blaundry pods?\b|\bfabric softener\b|\bdryer sheets?\b/, 'GS-Laundry Supplies - Guest Use'],
-        [/\bdish soap\b|\bdishwasher detergent\b|\bdishwasher pods?\b|\bsponges?\b/, 'GS-Kitchen Supplies (dish soap/detergent, sponges)'],
-        [/\bshampoo\b|\bconditioner\b|\bbody wash\b|\blotion\b|\bbar soap\b|\bhand soap\b|\btoiletries?\b/, 'GS-Toiletries-Soap/Shampoo/Lotion'],
-        [/\bfacial tissues?\b|\btissues?\b/, 'GS-Tissues'],
-        [/\bbottled water\b|\bwater bottles?\b/, 'GS-Water bottles'],
-        [/\bcoffee\b|\bk cups?\b|\bcoffee creamer\b|\bsugar packets?\b/, 'GS-Coffee/Coffee Supplies'],
-        [/\bspices?\b|\bsalt packets?\b|\bpepper packets?\b/, 'GS-Spices'],
-        [/\bbath towels?\b|\bwashcloths?\b|\bwash cloths?\b/, 'Linen - Bath Towels & Washcloths'],
-        [/\bpool towels?\b/, 'Linen - Pool Towels'],
-        [/\bsheet sets?\b|\bbed sheets?\b|\bfitted sheets?\b|\bflat sheets?\b|\b(?:king|queen|california king|twin|full) sheets?\b/, 'Linen - Sheets'],
-        [/\bpillow protectors?\b/, 'Linen - Pillow Protectors'],
-        [/\bpillows?\b/, 'Linen - Pillows'],
-        [/\bmattress pads?\b|\bmattress protectors?\b/, 'Linen - Mattress Pads'],
-        [/\bduvets?\b/, 'Linen - Duvets'],
-        [/\bblankets?\b|\bcomforters?\b/, 'Linen - Blankets'],
-        [/\bshower curtains?\b/, 'Linen - Shower Curtains'],
-        [/\bkitchen towels?\b|\bdish towels?\b/, 'Linen - Kitchen Towels'],
-        [/\bdoor locks?\b|\bthermostats?\b|\bpointcentral\b/, 'US-Point Central Locks/Thermostats'],
-        [/\bkeurig coffee makers?\b|\bkeurig machines?\b/, 'US-Keurig']
-      ];
-      for (const [re, category] of rules) if (re.test(d)) return { category, memo: MEMOS[category] || '' };
-      return { category: '', memo: '' };
-    }
+ if(isOrderDetails){
+  let current=null;
+  const stop=/^(?:Sold by|Seller Credentials:|Business Price|Condition:|Shipping Address:|Shipping Speed:|Items Ordered|Not Yet Shipped|Shipped on|Payment information|Payment Method:|Billing address|Item\(s\) Subtotal:|Shipping & Handling:|Total before tax:|Sales Tax:|Estimated Tax:|Total for This Shipment:|Grand Total:|Order Total:|Cost center:|Location:|PO number|Amazon\.com order number|Details for Order|To view the status|Conditions of Use)/i;
+  for(const raw of lines){const line=raw.replace(/\s+/g,' ').trim();let m=line.match(/^(\d+)\s+of:\s*(.*?)\s+\$([\d,]+\.\d{2})$/i);if(m){current={description:m[2],qty:+m[1],unitPrice:+m[3].replace(/,/g,''),tax:0};current.amount=+(current.qty*current.unitPrice).toFixed(2);items.push(current);continue}m=line.match(/^(\d+)\s+of:\s*(.*)$/i);if(m){current={description:m[2],qty:+m[1],unitPrice:0,amount:0,tax:0};items.push(current);continue}if(current&&!current.unitPrice&&(m=line.match(/^\$([\d,]+\.\d{2})$/))){current.unitPrice=+m[1].replace(/,/g,'');current.amount=+(current.qty*current.unitPrice).toFixed(2);continue}if(stop.test(line)){current=null;continue}if(current&&line&&!/^[-]+$/.test(line)&&!/^\$[\d,]+\.\d{2}$/.test(line))current.description+=` ${line}`}
+  for(let i=items.length-1;i>=0;i--)if(!items[i].unitPrice||!items[i].description)items.splice(i,1);
+  allocateTax(items,aggregateTax);
+ }else{
+  let buffer=[],current=null;
+  const skip=s=>!s||/^Description\b|^Quantity\b|^Unit Price\b|^Amount\b|^Card Used\b|^Order Number\b|^PO Number\b|^Visa\s*\(|^Unit Supplies\b|^Cost center:|^Location:|^Taxes:|^Total:/i.test(s)||/^\$[\d,]+\.\d{2}$/.test(s)||/^\d{3}-\d{7}-\d{7}$/.test(s)||/^(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s+\d{4}/i.test(s);
+  for(const raw of lines){const line=raw.replace(/\s+/g,' ').trim();let m=line.match(/^Tax\s+\$([\d,]+\.\d{2})$/i);if(m&&current){current.tax=+m[1].replace(/,/g,'');continue}m=line.match(/^Discount\s+-?\$([\d,]+\.\d{2})$/i);if(m&&current)continue;m=line.match(/^(.*?)\s+(\d+)\s+\$([\d,]+\.\d{2})\s+\$([\d,]+\.\d{2})$/);if(m){current={description:[...buffer,m[1]].filter(Boolean).join(' ').trim(),qty:+m[2],unitPrice:+m[3].replace(/,/g,''),amount:+m[4].replace(/,/g,''),tax:0};items.push(current);buffer=[];continue}m=line.match(/^(\d+)\s+\$([\d,]+\.\d{2})\s+\$([\d,]+\.\d{2})$/);if(m&&buffer.length){current={description:buffer.join(' '),qty:+m[1],unitPrice:+m[2].replace(/,/g,''),amount:+m[3].replace(/,/g,''),tax:0};items.push(current);buffer=[];continue}if(!skip(line))buffer.push(line)}
+ }
+ for(const item of items){item.description=item.description.replace(/\s+/g,' ').trim();item.lineTotal=+(item.amount+item.tax).toFixed(2);const c=classify(item.description);item.coding=c.coding;item.memo=c.memo}
+ return{order,date:dateMatch?dateMatch[0]:'—',total:orderTotal||rampTotal,items};
+}
 
-    async function extractPageLines(page) {
-      const content = await page.getTextContent();
-      const byY = [];
-      for (const item of content.items) {
-        const text = (item.str || '').trim();
-        if (!text) continue;
-        const x = item.transform[4];
-        const y = item.transform[5];
-        let row = byY.find(r => Math.abs(r.y - y) <= 2.5);
-        if (!row) { row = { y, items: [] }; byY.push(row); }
-        row.items.push({ x, text });
-      }
-      byY.sort((a,b) => b.y - a.y);
-      return byY.map(row => row.items.sort((a,b)=>a.x-b.x).map(i=>i.text).join(' ').replace(/\s+/g,' ').trim());
-    }
+function grouped(){const groups=new Map();purchaseLines.forEach((line,index)=>{const key=line.coding||'__review';const label=line.coding||'Review Required';if(!groups.has(key))groups.set(key,{key,label,memos:new Map(),total:0});const group=groups.get(key),memo=line.memo||(line.coding?'—':'Select coding below');group.memos.set(memo,(group.memos.get(memo)||0)+line.lineTotal);group.total+=line.lineTotal});return [...groups.values()]}
+function joinMemos(memos){const values=[...memos.keys()].filter(v=>v&&v!=='—'&&v!=='Select coding below');if(!values.length)return 'Review Required';if(values.length===1)return values[0];if(values.length===2)return `${values[0]} & ${values[1]}`;return `${values.slice(0,-1).join(', ')}, & ${values[values.length-1]}`}
+function renderSummary(){const wrap=$('summaryWrap'),groups=grouped();wrap.innerHTML='';if(!groups.length){wrap.innerHTML='<div class="empty">No purchase lines were found.</div>';return}for(const group of groups){const div=document.createElement('div');div.className='group'+(group.key==='__review'?' review-group':'');const memoText=joinMemos(group.memos);div.innerHTML=`<div class="group-head"><span>${esc(group.label)}</span><span>${money(group.total)}</span></div><table><tr><td><strong>Memo:</strong> ${esc(memoText)}</td><td class="amount"><strong>Split Amount: ${money(group.total)}</strong></td></tr></table>`;wrap.appendChild(div)}const total=groups.reduce((s,g)=>s+g.total,0),totalDiv=document.createElement('div');totalDiv.className='transaction-total';totalDiv.innerHTML=`<span>Transaction Total</span><span>${money(total)}</span>`;wrap.appendChild(totalDiv)}
+function renderLines(){const body=$('linesBody');body.innerHTML='';purchaseLines.forEach((line,i)=>{const tr=document.createElement('tr');if(!line.coding)tr.className='uncoded';tr.innerHTML=`<td class="desc">${esc(line.description)}<div class="sub">Item ${money(line.amount)} + Tax ${money(line.tax)}</div>${line.coding?'':'<div class="review-note">Review Required</div>'}</td><td><select data-i="${i}" data-field="coding">${codingOptions(line.coding)}</select></td><td><input type="text" data-i="${i}" data-field="memo" value="${esc(line.memo)}"></td><td class="amount"><strong>${money(line.lineTotal)}</strong></td>`;body.appendChild(tr)});body.querySelectorAll('[data-field]').forEach(el=>el.addEventListener(el.dataset.field==='memo'?'input':'change',e=>{const i=+e.target.dataset.i,field=e.target.dataset.field;purchaseLines[i][field]=e.target.value;if(field==='coding'){const opt=optionByCode(e.target.value);purchaseLines[i].memo=opt?suggestMemo(purchaseLines[i].description,opt.code,opt.memo):'';renderLines()}else renderSummary()}));renderSummary()}
 
-    function allocateTax(items, totalTax) {
-      const cents = Math.round(Number(totalTax || 0) * 100);
-      const subtotal = items.reduce((sum, item) => sum + item.amount, 0);
-      if (!items.length || !cents || !subtotal) {
-        items.forEach(item => item.tax = 0);
-        return;
-      }
-      const shares = items.map((item, index) => {
-        const exact = cents * item.amount / subtotal;
-        const floor = Math.floor(exact);
-        return { index, floor, fraction: exact - floor };
-      });
-      let assigned = shares.reduce((sum, x) => sum + x.floor, 0);
-      shares.sort((a,b) => b.fraction - a.fraction || a.index - b.index);
-      for (let i=0; i<cents-assigned; i++) shares[i].floor += 1;
-      shares.sort((a,b) => a.index - b.index);
-      shares.forEach(x => items[x.index].tax = x.floor / 100);
-    }
+function setStatus(message,error=false){const s=$('status');s.textContent=message;s.className=`status show${error?' error':''}`}
+async function handleFile(file){if(!file||!/pdf/i.test(file.type||file.name))return setStatus('Please select a PDF file.',true);currentFile=file;try{setStatus('Reading Amazon PDF…');const pdf=await pdfjsLib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise,lines=[];for(let p=1;p<=pdf.numPages;p++)lines.push(...await pageLines(await pdf.getPage(p)));const parsed=parseAmazon(lines);if(!parsed.items.length)throw new Error('No Amazon purchase lines were found.');purchaseLines=parsed.items;receiptTotal=parsed.total||purchaseLines.reduce((s,x)=>s+x.lineTotal,0);$('orderNumber').textContent=parsed.order;$('orderDate').textContent=parsed.date;$('transactionTotal').textContent=money(receiptTotal);$('content').style.display='block';$('uploadCard').style.display='none';$('profileRow').style.display='none';$('loadedBar').style.display='flex';$('loadedName').textContent=file.name;$('loadedMeta').textContent=`${PROFILE_META[profile].name} • Order ${parsed.order} • ${money(receiptTotal)}`;renderLines();const reviewCount=purchaseLines.filter(x=>!x.coding).length;setStatus(reviewCount?`${purchaseLines.length} lines found. ${reviewCount} need review.`:`${purchaseLines.length} lines found. Ramp split is ready.`)}catch(error){console.error(error);$('content').style.display='none';setStatus(`I couldn't read this PDF: ${error.message}`,true)}}
+function reset(){purchaseLines=[];currentFile=null;$('pdfInput').value='';$('content').style.display='none';$('uploadCard').style.display='block';$('profileRow').style.display='grid';$('loadedBar').style.display='none';$('status').className='status';window.scrollTo({top:0,behavior:'smooth'})}
+function setProfile(next){profile=next;document.querySelectorAll('.profile').forEach(b=>b.classList.toggle('active',b.dataset.profile===profile));$('profileHelp').textContent=`${PROFILE_META[profile].name} selected.`}
 
-    function parseAmazon(lines) {
-      const joined = lines.join('\n');
-      const orderNumber = (joined.match(/\b\d{3}-\d{7}-\d{7}\b/) || [])[0] || '—';
-      const dateMatch = joined.match(/(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s+\d{4}/i);
+function openManager(){populateManagerProfiles();$('managerProfile').value=profile;managerSelectedCode=profileOptions(profile)[0].code;renderManager();$('managerModal').classList.add('show')}
+function closeManager(){$('managerModal').classList.remove('show');if(purchaseLines.length){for(const line of purchaseLines){if(!line.coding){const c=classify(line.description);line.coding=c.coding;line.memo=c.memo}}renderLines()}}
+function populateManagerProfiles(){$('managerProfile').innerHTML=Object.entries(PROFILE_META).map(([k,v])=>`<option value="${k}">${esc(v.name)}</option>`).join('')}
+function renderManager(){const p=$('managerProfile').value,opts=profileOptions(p);if(!opts.some(x=>x.code===managerSelectedCode))managerSelectedCode=opts[0].code;const list=$('managerCategoryList');list.innerHTML=opts.map(opt=>`<button class="manager-cat ${opt.code===managerSelectedCode?'active':''}" data-code="${esc(opt.code)}">${esc(opt.code)}</button>`).join('');list.querySelectorAll('[data-code]').forEach(b=>b.onclick=()=>{managerSelectedCode=b.dataset.code;renderManager()});const option=opts.find(x=>x.code===managerSelectedCode),rule=profileRules(p).find(x=>x.code===managerSelectedCode);$('managerEditor').innerHTML=`<h3>${esc(option.code)}</h3><div class="rule-code">Default memo: ${esc(option.memo)}</div><div class="keyword-list">${(rule.keywords||[]).map((k,i)=>`<span class="keyword">${esc(k)}<button data-remove="${i}" title="Remove">×</button></span>`).join('')||'<span class="sub">No keywords yet.</span>'}</div><div class="add-keyword"><input id="newKeyword" type="text" placeholder="Add a product word or phrase"><button id="addKeyword">Add Keyword</button></div>`;$('managerEditor').querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{rule.keywords.splice(+b.dataset.remove,1);saveRules();renderManager()});$('addKeyword').onclick=()=>{const input=$('newKeyword'),value=input.value.trim();if(value&&!rule.keywords.some(k=>normalize(k)===normalize(value))){rule.keywords.push(value);saveRules();renderManager()}};$('newKeyword').addEventListener('keydown',e=>{if(e.key==='Enter')$('addKeyword').click()})}
 
-      // Ramp-exported Amazon Business receipt format.
-      const rampTotalMatches = [...joined.matchAll(/(?:^|\s)Total:\s*\$([\d,]+\.\d{2})/gmi)];
-      const rampTotal = rampTotalMatches.length ? Number(rampTotalMatches.at(-1)[1].replace(/,/g,'')) : 0;
-
-      // Amazon order-details format used by team members while coding.
-      const orderTotalMatch = joined.match(/(?:Order Total|Grand Total):\s*\$([\d,]+\.\d{2})/i);
-      const orderTotal = orderTotalMatch ? Number(orderTotalMatch[1].replace(/,/g,'')) : 0;
-      // Prefer the order-level Estimated Tax. A shipment-level Sales Tax may also appear earlier in the PDF.
-      const estimatedTaxMatch = joined.match(/Estimated Tax:\s*\$([\d,]+\.\d{2})/i);
-      const salesTaxMatches = [...joined.matchAll(/Sales Tax:\s*\$([\d,]+\.\d{2})/gi)];
-      const aggregateTax = estimatedTaxMatch
-        ? Number(estimatedTaxMatch[1].replace(/,/g,''))
-        : (salesTaxMatches.length ? Number(salesTaxMatches.at(-1)[1].replace(/,/g,'')) : 0);
-
-      const isOrderDetails = /Details for Order|Items Ordered/i.test(joined) && /\d+\s+of:/i.test(joined);
-      const items = [];
-
-      if (isOrderDetails) {
-        let current = null;
-        const stopDescription = /^(?:Sold by|Seller Credentials:|Business Price|Condition:|Shipping Address:|Shipping Speed:|Items Ordered|Not Yet Shipped|Shipped on|Payment information|Payment Method:|Billing address|Item\(s\) Subtotal:|Shipping & Handling:|Total before tax:|Sales Tax:|Estimated Tax:|Total for This Shipment:|Grand Total:|Order Total:|Cost center:|Location:|PO number|Amazon\.com order number|Details for Order|To view the status|Conditions of Use)/i;
-
-        for (const raw of lines) {
-          const line = raw.replace(/\s+/g,' ').trim();
-          if (!line) continue;
-
-          // Usually the quantity, description, and unit price are on one PDF text row.
-          let m = line.match(/^(\d+)\s+of:\s*(.*?)\s+\$([\d,]+\.\d{2})$/i);
-          if (m) {
-            current = {
-              description: m[2].trim(),
-              qty: Number(m[1]),
-              unitPrice: Number(m[3].replace(/,/g,'')),
-              amount: 0,
-              tax: 0,
-              discount: 0
-            };
-            current.amount = +(current.qty * current.unitPrice).toFixed(2);
-            items.push(current);
-            continue;
-          }
-
-          // Some PDFs separate the right-aligned price from the item-start row.
-          m = line.match(/^(\d+)\s+of:\s*(.*)$/i);
-          if (m) {
-            current = { description:m[2].trim(), qty:Number(m[1]), unitPrice:0, amount:0, tax:0, discount:0 };
-            items.push(current);
-            continue;
-          }
-          if (current && !current.unitPrice) {
-            m = line.match(/^\$([\d,]+\.\d{2})$/);
-            if (m) {
-              current.unitPrice = Number(m[1].replace(/,/g,''));
-              current.amount = +(current.qty * current.unitPrice).toFixed(2);
-              continue;
-            }
-          }
-
-          // Seller/order metadata marks the end of the current product description.
-          // Clear the active item so shipping addresses, totals, and payment details can never be appended.
-          if (stopDescription.test(line)) {
-            current = null;
-            continue;
-          }
-
-          // Continue only genuine wrapped product-description lines.
-          if (current && !/^[-]+$/.test(line) && !/^\$[\d,]+\.\d{2}$/.test(line)) {
-            current.description += ` ${line}`;
-          }
-        }
-
-        // Remove any incomplete item that could not obtain a price.
-        for (let i=items.length-1; i>=0; i--) if (!items[i].unitPrice || !items[i].description) items.splice(i,1);
-        allocateTax(items, aggregateTax);
-      } else {
-        let buffer = [];
-        let current = null;
-        const skip = line => {
-          const s = line.trim();
-          return !s ||
-            /^Description\b/i.test(s) || /^Quantity\b/i.test(s) || /^Unit Price\b/i.test(s) ||
-            /^Card Used\b/i.test(s) || /^Order Number\b/i.test(s) || /^PO Number\b/i.test(s) ||
-            /^Visa\s*\(/i.test(s) || /^Unit Supplies\b/i.test(s) || /^Cost center:/i.test(s) ||
-            /^Location:/i.test(s) || /^Taxes:/i.test(s) || /^Total:/i.test(s) ||
-            /^\$[\d,]+\.\d{2}$/.test(s) || /^\d{3}-\d{7}-\d{7}$/.test(s) ||
-            /^(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s+\d{4}/i.test(s);
-        };
-
-        for (const raw of lines) {
-          const line = raw.replace(/\s+/g,' ').trim();
-          if (!line) continue;
-          const tax = line.match(/^Tax\s+\$([\d,]+\.\d{2})$/i);
-          if (tax && current) { current.tax = Number(tax[1].replace(/,/g,'')); continue; }
-          const discount = line.match(/^Discount\s+-?\$([\d,]+\.\d{2})$/i);
-          if (discount && current) { current.discount = Number(discount[1].replace(/,/g,'')); continue; }
-
-          let m = line.match(/^(.*?)\s+(\d+)\s+\$([\d,]+\.\d{2})\s+\$([\d,]+\.\d{2})$/);
-          if (m) {
-            const description = [...buffer, m[1].trim()].filter(Boolean).join(' ').trim();
-            current = { description, qty:Number(m[2]), unitPrice:Number(m[3].replace(/,/g,'')), amount:Number(m[4].replace(/,/g,'')), tax:0, discount:0 };
-            items.push(current); buffer=[]; continue;
-          }
-          m = line.match(/^(\d+)\s+\$([\d,]+\.\d{2})\s+\$([\d,]+\.\d{2})$/);
-          if (m && buffer.length) {
-            current = { description:buffer.join(' ').trim(), qty:Number(m[1]), unitPrice:Number(m[2].replace(/,/g,'')), amount:Number(m[3].replace(/,/g,'')), tax:0, discount:0 };
-            items.push(current); buffer=[]; continue;
-          }
-          if (!skip(line)) buffer.push(line);
-        }
-      }
-
-      for (const item of items) {
-        item.description = item.description.replace(/\s+/g,' ').trim();
-        item.lineTotal = +(item.amount + item.tax).toFixed(2);
-        const coded = classify(item.description);
-        item.category = coded.category;
-        item.memo = coded.memo;
-      }
-      return { orderNumber, orderDate: dateMatch ? dateMatch[0] : '—', total: orderTotal || rampTotal, items };
-    }
-
-    function render() {
-      const linesBody = $('linesBody');
-      linesBody.innerHTML = '';
-      purchaseLines.forEach((line, index) => {
-        const tr = document.createElement('tr');
-        if (!line.category) tr.className = 'uncoded';
-        tr.innerHTML = `
-          <td class="desc">${escapeHtml(line.description)}<div class="line-sub">Item ${money(line.amount)} + Tax ${money(line.tax)}</div>${line.category ? '' : '<div class="review-note">Review Required</div>'}</td>
-          <td><select data-field="category" data-index="${index}">${categoryOptions(line.category)}</select></td>
-          <td><input type="text" data-field="memo" data-index="${index}" value="${escapeHtml(line.memo)}" /></td>
-          <td class="line-amount">${money(line.lineTotal)}</td>`;
-        linesBody.appendChild(tr);
-      });
-
-      linesBody.querySelectorAll('[data-field]').forEach(el => {
-        const eventName = el.dataset.field === 'memo' ? 'input' : 'change';
-        el.addEventListener(eventName, e => {
-          const idx = Number(e.target.dataset.index);
-          const field = e.target.dataset.field;
-          purchaseLines[idx][field] = e.target.value;
-          if (field === 'category') {
-            purchaseLines[idx].memo = MEMOS[e.target.value] || purchaseLines[idx].memo || '';
-            saveMapping(purchaseLines[idx].description, purchaseLines[idx].category, purchaseLines[idx].memo);
-            render();
-          } else {
-            saveMapping(purchaseLines[idx].description, purchaseLines[idx].category, purchaseLines[idx].memo);
-            renderSummary();
-          }
-        });
-      });
-
-      renderSummary();
-    }
-
-    function groupedLines() {
-      const groups = new Map();
-      purchaseLines.forEach((line, index) => {
-        const key = line.category || `__uncoded_${index}`;
-        if (!groups.has(key)) groups.set(key, { key, category:line.category, memo:line.memo || '', amount:0, indexes:[] });
-        const group = groups.get(key);
-        group.amount += line.lineTotal;
-        group.indexes.push(index);
-        if (!group.memo && line.memo) group.memo = line.memo;
-      });
-      return [...groups.values()];
-    }
-
-    function renderSummary() {
-      const body = $('summaryBody');
-      body.innerHTML = '';
-      const groups = groupedLines();
-      if (!groups.length) {
-        body.innerHTML = '<tr><td colspan="3" class="empty-summary">No purchase lines were found.</td></tr>';
-        return;
-      }
-      groups.forEach((group) => {
-        const tr = document.createElement('tr');
-        if (!group.category) tr.className = 'uncoded';
-        tr.innerHTML = `
-          <td><strong>${group.category ? escapeHtml(group.category) : '<span class="review-required">Review Required</span>'}</strong></td>
-          <td>${escapeHtml(group.memo || (group.category ? '—' : 'Select a Ramp item below'))}</td>
-          <td class="amount"><strong>${money(group.amount)}</strong></td>`;
-        body.appendChild(tr);
-      });
-      const total = groups.reduce((s,g)=>s+g.amount,0);
-      const totalRow = document.createElement('tr');
-      totalRow.className = 'summary-total';
-      totalRow.innerHTML = `<td colspan="2">Transaction Total</td><td class="amount">${money(total)}</td>`;
-      body.appendChild(totalRow);
-
-    }
-
-    async function handleFile(file) {
-      if (!file || !/pdf/i.test(file.type || file.name)) return setStatus('Please select a PDF file.', 'error');
-      try {
-        setStatus('Reading Amazon PDF…', 'info');
-        const bytes = new Uint8Array(await file.arrayBuffer());
-        const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
-        const allLines = [];
-        for (let p=1; p<=pdf.numPages; p++) allLines.push(...await extractPageLines(await pdf.getPage(p)));
-        const parsed = parseAmazon(allLines);
-        if (!parsed.items.length) throw new Error('No Amazon purchase lines were found in this PDF.');
-        purchaseLines = parsed.items;
-        receiptTotal = parsed.total || purchaseLines.reduce((s,l)=>s+l.lineTotal,0);
-        $('orderNumber').textContent = parsed.orderNumber;
-        $('orderDate').textContent = parsed.orderDate;
-        $('transactionTotal').textContent = money(receiptTotal);
-        $('content').style.display = 'block';
-        $('uploadCard').style.display = 'none';
-        $('loadedBar').style.display = 'flex';
-        $('loadedFileName').textContent = file.name;
-        $('loadedFileMeta').textContent = `Order ${parsed.orderNumber} • ${money(receiptTotal)}`;
-        render();
-        const needsReview = purchaseLines.filter(x=>!x.category).length;
-        setStatus(needsReview ? `${purchaseLines.length} purchase lines found. ${needsReview} line${needsReview===1?'':'s'} need review.` : `${purchaseLines.length} purchase lines found. Ramp split is ready.`, needsReview ? 'info' : 'info');
-      } catch (err) {
-        console.error(err);
-        $('content').style.display = 'none';
-        setStatus(`I couldn't read this PDF: ${err.message || 'Unknown error'}`, 'error');
-      }
-    }
-
-    function setStatus(message, type='info') { const el=$('status'); el.textContent=message; el.className=`status ${type}`; }
-
-    $('pdfInput').addEventListener('change', e => handleFile(e.target.files[0]));
-    const dz = $('dropZone');
-    ['dragenter','dragover'].forEach(evt => dz.addEventListener(evt, e => { e.preventDefault(); dz.classList.add('drag'); }));
-    ['dragleave','drop'].forEach(evt => dz.addEventListener(evt, e => { e.preventDefault(); dz.classList.remove('drag'); }));
-    dz.addEventListener('drop', e => handleFile(e.dataTransfer.files[0]));
-
-    function resetUpload() {
-      $('pdfInput').value='';
-      $('content').style.display='none';
-      $('status').className='status';
-      $('status').textContent='';
-      $('uploadCard').style.display='block';
-      $('loadedBar').style.display='none';
-      purchaseLines=[];
-      window.scrollTo({top:0,behavior:'smooth'});
-    }
-    $('newBtn').addEventListener('click', resetUpload);
-    $('changePdfBtn').addEventListener('click', () => { resetUpload(); setTimeout(() => $('pdfInput').click(), 120); });
-    $('printBtn').addEventListener('click', () => window.print());
-    $('copyBtn').addEventListener('click', async () => {
-      const groups = groupedLines();
-      const rows = groups.map(g => `${g.category || 'Review Required'}\t${g.memo || ''}\t${money(g.amount)}`);
-      const total = groups.reduce((s,g)=>s+g.amount,0);
-      const text = ['Ramp Item\tMemo\tSplit Amount', ...rows, `Transaction Total\t\t${money(total)}`].join('\n');
-      try { await navigator.clipboard.writeText(text); $('copyBtn').textContent='Copied'; setTimeout(()=>$('copyBtn').textContent='Copy Ramp Split',1300); }
-      catch { window.prompt('Copy the Ramp split:', text); }
-    });
-  </script>
+for(const b of document.querySelectorAll('.profile'))b.addEventListener('click',()=>setProfile(b.dataset.profile));
+$('pdfInput').addEventListener('change',e=>handleFile(e.target.files[0]));
+const drop=$('dropZone');for(const ev of ['dragenter','dragover'])drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('drag')});for(const ev of ['dragleave','drop'])drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('drag')});drop.addEventListener('drop',e=>handleFile(e.dataTransfer.files[0]));
+$('newBtn').onclick=reset;$('changeBtn').onclick=()=>{reset();setTimeout(()=>$('pdfInput').click(),100)};$('printBtn').onclick=()=>window.print();
+$('copyBtn').onclick=async()=>{const groups=grouped(),rows=[];for(const g of groups)rows.push(`${g.label}	${joinMemos(g.memos)}	${money(g.total)}`);rows.push('',`Transaction Total		${money(groups.reduce((s,g)=>s+g.total,0))}`);const text=rows.join('\n');try{await navigator.clipboard.writeText(text);$('copyBtn').textContent='Copied';setTimeout(()=>$('copyBtn').textContent='Copy Ramp Split',1200)}catch{prompt('Copy Ramp Split:',text)}};
+$('managerBtn').onclick=openManager;$('closeManager').onclick=closeManager;$('doneManager').onclick=closeManager;$('managerModal').addEventListener('click',e=>{if(e.target===$('managerModal'))closeManager()});$('managerProfile').onchange=()=>{managerSelectedCode=profileOptions($('managerProfile').value)[0].code;renderManager()};$('resetKeywords').onclick=()=>{const p=$('managerProfile').value;rules[p]=JSON.parse(JSON.stringify(DEFAULT_RULES[p]));saveRules();renderManager()};
+</script>
 </body>
 </html>
