@@ -473,8 +473,12 @@
       // Amazon order-details format used by team members while coding.
       const orderTotalMatch = joined.match(/(?:Order Total|Grand Total):\s*\$([\d,]+\.\d{2})/i);
       const orderTotal = orderTotalMatch ? Number(orderTotalMatch[1].replace(/,/g,'')) : 0;
-      const estimatedTaxMatch = joined.match(/(?:Estimated Tax|Sales Tax):\s*\$([\d,]+\.\d{2})/i);
-      const aggregateTax = estimatedTaxMatch ? Number(estimatedTaxMatch[1].replace(/,/g,'')) : 0;
+      // Prefer the order-level Estimated Tax. A shipment-level Sales Tax may also appear earlier in the PDF.
+      const estimatedTaxMatch = joined.match(/Estimated Tax:\s*\$([\d,]+\.\d{2})/i);
+      const salesTaxMatches = [...joined.matchAll(/Sales Tax:\s*\$([\d,]+\.\d{2})/gi)];
+      const aggregateTax = estimatedTaxMatch
+        ? Number(estimatedTaxMatch[1].replace(/,/g,''))
+        : (salesTaxMatches.length ? Number(salesTaxMatches.at(-1)[1].replace(/,/g,'')) : 0);
 
       const isOrderDetails = /Details for Order|Items Ordered/i.test(joined) && /\d+\s+of:/i.test(joined);
       const items = [];
@@ -519,8 +523,15 @@
             }
           }
 
-          // Continue wrapped product descriptions, but stop before seller/shipping/payment metadata.
-          if (current && !stopDescription.test(line) && !/^[-]+$/.test(line) && !/^\$[\d,]+\.\d{2}$/.test(line)) {
+          // Seller/order metadata marks the end of the current product description.
+          // Clear the active item so shipping addresses, totals, and payment details can never be appended.
+          if (stopDescription.test(line)) {
+            current = null;
+            continue;
+          }
+
+          // Continue only genuine wrapped product-description lines.
+          if (current && !/^[-]+$/.test(line) && !/^\$[\d,]+\.\d{2}$/.test(line)) {
             current.description += ` ${line}`;
           }
         }
