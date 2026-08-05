@@ -190,20 +190,34 @@ function parseAmazon(lines){
  const dateMatch=joined.match(/(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s+\d{4}/i);
  const rampTotals=[...joined.matchAll(/(?:^|\s)Total:\s*\$([\d,]+\.\d{2})/gmi)];
  const rampTotal=rampTotals.length?+rampTotals.at(-1)[1].replace(/,/g,''):0;
- const orderTotalMatch=joined.match(/(?:Order Total|Grand Total):\s*\$([\d,]+\.\d{2})/i);
+ const orderTotalMatch=joined.match(/(?:Order Total|Grand Total):\s*(?:USD\s*)?\$?([\d,]+\.\d{2})/i);
  const orderTotal=orderTotalMatch?+orderTotalMatch[1].replace(/,/g,''):0;
- const estimatedTax=joined.match(/Estimated Tax:\s*\$([\d,]+\.\d{2})/i);
+ const estimatedTax=joined.match(/Estimated tax(?: to be collected)?:\s*(?:USD\s*)?\$?([\d,]+\.\d{2})/i);
  const salesTaxes=[...joined.matchAll(/Sales Tax:\s*\$([\d,]+\.\d{2})/gi)];
  const aggregateTax=estimatedTax?+estimatedTax[1].replace(/,/g,''):(salesTaxes.length?+salesTaxes.at(-1)[1].replace(/,/g,''):0);
  const isOrderDetails=/Details for Order|Items Ordered/i.test(joined)&&/\d+\s+of:/i.test(joined);
  const items=[];
 
  if(isOrderDetails){
-  let current=null;
-  const stop=/^(?:Sold by|Seller Credentials:|Business Price|Condition:|Shipping Address:|Shipping Speed:|Items Ordered|Not Yet Shipped|Shipped on|Payment information|Payment Method:|Billing address|Item\(s\) Subtotal:|Shipping & Handling:|Total before tax:|Sales Tax:|Estimated Tax:|Total for This Shipment:|Grand Total:|Order Total:|Cost center:|Location:|PO number|Amazon\.com order number|Details for Order|To view the status|Conditions of Use)/i;
-  for(const raw of lines){const line=raw.replace(/\s+/g,' ').trim();let m=line.match(/^(\d+)\s+of:\s*(.*?)\s+\$([\d,]+\.\d{2})$/i);if(m){current={description:m[2],qty:+m[1],unitPrice:+m[3].replace(/,/g,''),tax:0};current.amount=+(current.qty*current.unitPrice).toFixed(2);items.push(current);continue}m=line.match(/^(\d+)\s+of:\s*(.*)$/i);if(m){current={description:m[2],qty:+m[1],unitPrice:0,amount:0,tax:0};items.push(current);continue}if(current&&!current.unitPrice&&(m=line.match(/^\$([\d,]+\.\d{2})$/))){current.unitPrice=+m[1].replace(/,/g,'');current.amount=+(current.qty*current.unitPrice).toFixed(2);continue}if(stop.test(line)){current=null;continue}if(current&&line&&!/^[-]+$/.test(line)&&!/^\$[\d,]+\.\d{2}$/.test(line))current.description+=` ${line}`}
+  let current=null,shipmentItems=[];
+  const stop=/^(?:Sold by|Seller Credentials:|Business Price|Condition:|Shipping Address:|Shipping Speed:|Items Ordered|Payment information|Payment Method:|Billing address|Item\(s\) Subtotal:|Shipping & Handling:|Total before tax:|Total for This Shipment:|Grand Total:|Order Total:|Cost center:|Location:|PO number|Amazon\.com order number|Details for Order|To view the status|Conditions of Use)/i;
+  const finishShipmentTax=(tax)=>{if(shipmentItems.length&&tax>0)allocateTax(shipmentItems,tax);shipmentItems=[]};
+  for(const raw of lines){
+   const line=raw.replace(/\s+/g,' ').trim();
+   if(/^(?:Not Yet Shipped|Shipped on)/i.test(line)){shipmentItems=[];current=null;continue}
+   let m=line.match(/^(\d+)\s+of:\s*(.*?)\s+\$([\d,]+\.\d{2})$/i);
+   if(m){current={description:m[2],qty:+m[1],unitPrice:+m[3].replace(/,/g,''),tax:0};current.amount=+(current.qty*current.unitPrice).toFixed(2);items.push(current);shipmentItems.push(current);continue}
+   m=line.match(/^(\d+)\s+of:\s*(.*)$/i);
+   if(m){current={description:m[2],qty:+m[1],unitPrice:0,amount:0,tax:0};items.push(current);shipmentItems.push(current);continue}
+   if(current&&!current.unitPrice&&(m=line.match(/^\$([\d,]+\.\d{2})$/))){current.unitPrice=+m[1].replace(/,/g,'');current.amount=+(current.qty*current.unitPrice).toFixed(2);continue}
+   m=line.match(/^Sales Tax:\s*(?:USD\s*)?\$?([\d,]+\.\d{2})$/i);
+   if(m){finishShipmentTax(+m[1].replace(/,/g,''));current=null;continue}
+   if(stop.test(line)){current=null;continue}
+   if(current&&line&&!/^[-]+$/.test(line)&&!/^\$[\d,]+\.\d{2}$/.test(line))current.description+=` ${line}`
+  }
   for(let i=items.length-1;i>=0;i--)if(!items[i].unitPrice||!items[i].description)items.splice(i,1);
-  allocateTax(items,aggregateTax);
+  const assignedTax=items.reduce((s,x)=>s+(x.tax||0),0);
+  if(!assignedTax&&aggregateTax)allocateTax(items,aggregateTax);
  }else{
   let buffer=[],current=null,inTable=false;
   for(const raw of lines){
