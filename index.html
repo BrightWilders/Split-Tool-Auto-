@@ -5,32 +5,27 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Amazon PDF Splitter</title>
 <style>
-:root{--navy:#12384a;--teal:#0b7894;--teal-dark:#075f76;--bg:#eef3f6;--line:#d7e1e6;--soft:#f5f8fa;--text:#17242b;--muted:#657780;--warn:#a86200;--danger:#a63333;--white:#fff}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px "Segoe UI",Arial,sans-serif}.page{max-width:1180px;margin:auto;padding:26px 18px 52px}.hero{background:var(--navy);color:#fff;padding:18px 22px;border-radius:12px 12px 0 0}.hero h1{margin:0;font-size:22px}.hero p{margin:5px 0 0;opacity:.85}.shell{background:#fff;border-radius:0 0 12px 12px;box-shadow:0 8px 28px rgba(30,62,78,.11);overflow:hidden}.setup{padding:20px 22px;border-bottom:1px solid var(--line)}.step-title{font-weight:800;color:var(--navy);margin-bottom:10px}.profiles{display:grid;grid-template-columns:repeat(5,minmax(130px,1fr));gap:10px;margin-bottom:16px}.profile{border:1px solid var(--line);background:#fff;color:var(--navy);padding:12px 10px;border-radius:9px;font-weight:750;cursor:pointer}.profile:hover{background:#f3f7f8}.profile.active{background:var(--navy);color:#fff;border-color:var(--navy)}.upload-card{max-width:630px;margin:auto;border:1px solid var(--line);background:#f8fbfc;border-radius:10px;padding:18px;text-align:center}.upload-title{font-size:16px;font-weight:800;color:var(--navy)}.upload-help{color:var(--muted);margin:5px 0 13px}.choose{display:inline-flex;min-width:165px;align-items:center;justify-content:center;background:var(--teal);color:#fff;padding:10px 16px;border-radius:7px;font-weight:800;cursor:pointer}.choose:hover,.choose.drag{background:var(--teal-dark)}.choose input{display:none}.hint{font-size:12px;color:var(--muted);margin-top:9px}.loaded{display:none;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--line);background:#f8fbfc;border-radius:9px;padding:11px 13px}.loaded-name{font-weight:800;color:var(--navy)}.loaded-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.loaded-meta{font-size:12px;color:var(--muted);margin-top:3px}.status{display:none;margin-top:12px;padding:10px 12px;border-radius:7px;background:var(--soft);color:var(--muted)}.status.show{display:block}.status.error{background:#fff2f2;color:var(--danger)}.content{display:none;padding:22px}.order-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:22px}.meta{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 12px}.meta-label{text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-size:11px}.meta-value{font-weight:750;margin-top:3px}.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}.section-title{margin:0;font-size:18px;color:var(--navy)}.summary-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:#fff}.split-table{width:100%;border-collapse:collapse;min-width:680px}.split-table th{padding:7px 10px;background:#edf3f5;color:var(--navy);text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.25px;border-bottom:1px solid var(--line)}.split-table td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.25}.split-table tbody tr:last-child td{border-bottom:0}.split-table .coding{font-weight:800;color:var(--navy)}.split-table .dept{text-align:center;width:85px}.split-table .memo{min-width:240px}.split-table .amount{text-align:right;width:115px;white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:800}.split-table .review-row{background:#fff8ea}.split-table .review-row .coding{color:var(--warn)}.split-table tfoot td{background:var(--navy);color:#fff;font-weight:800;padding:9px 10px;border:0}.split-table tfoot .total-label{text-align:right}.amount{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}.actions{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0 18px}button{border:0;border-radius:7px;padding:9px 13px;font:inherit;font-weight:750;cursor:pointer;background:var(--teal);color:#fff}button:hover{background:var(--teal-dark)}button.secondary{background:#e8eef1;color:var(--navy)}button.ghost{background:#fff;color:var(--navy);border:1px solid var(--line)}details{border:1px solid var(--line);border-radius:9px;overflow:hidden;background:#fff}summary{list-style:none;cursor:pointer;padding:13px 15px;font-weight:800;color:var(--navy);background:#f4f7f8}summary::-webkit-details-marker{display:none}summary:before{content:"▸";display:inline-block;margin-right:8px;transition:.15s}details[open] summary:before{transform:rotate(90deg)}.lines-wrap{overflow-x:auto}.lines-table{width:100%;min-width:920px;border-collapse:collapse}.lines-table th{text-align:left;padding:10px 12px;background:#edf3f5;color:var(--navy);font-size:12px;text-transform:uppercase}.lines-table td{padding:10px 12px;border-top:1px solid var(--line);vertical-align:middle}.desc{max-width:450px;line-height:1.35}.sub{font-size:12px;color:var(--muted);margin-top:4px}.uncoded{background:#fff7e9}.review-note{font-size:12px;color:var(--warn);font-weight:800;margin-top:4px}select,input[type=text]{width:100%;border:1px solid #cbd7dc;border-radius:6px;padding:7px 8px;background:#fff;color:var(--text);font:inherit}.empty{padding:22px;text-align:center;color:var(--muted);border:1px solid var(--line);border-radius:9px}.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(10,28,37,.55);z-index:20;padding:24px;overflow:auto}.modal-backdrop.show{display:block}.modal{max-width:900px;margin:20px auto;background:#fff;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.25);overflow:hidden}.modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--navy);color:#fff;padding:15px 18px}.modal-head h2{margin:0;font-size:18px}.modal-body{padding:18px}.manager-top{display:grid;grid-template-columns:220px 1fr;gap:12px;margin-bottom:16px}.manager-list{display:flex;flex-direction:column;gap:7px}.manager-cat{background:#fff;color:var(--navy);border:1px solid var(--line);text-align:left}.manager-cat.active{background:var(--navy);color:#fff}.rule-card{border:1px solid var(--line);border-radius:9px;padding:14px;background:#fbfcfd}.rule-card h3{margin:0 0 5px;color:var(--navy)}.rule-code{font-size:12px;color:var(--muted);margin-bottom:12px}.keyword-list{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}.keyword{display:inline-flex;align-items:center;gap:6px;background:#eaf1f4;border:1px solid #d2e0e6;border-radius:999px;padding:5px 8px}.keyword button{padding:0;background:transparent;color:var(--danger);font-size:15px}.add-keyword{display:flex;gap:8px}.add-keyword input{flex:1}.manager-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}.close-x{background:transparent;padding:3px 7px;font-size:20px}.close-x:hover{background:rgba(255,255,255,.15)}.category-picker{display:grid;grid-template-columns:repeat(2,minmax(180px,1fr));gap:10px;margin:14px 0}.category-choice{background:#fff;color:var(--navy);border:1px solid var(--line);padding:14px;text-align:left}.category-choice:hover{background:#f3f7f8}.category-choice.active{border:2px solid var(--teal);background:#eef8fa}.category-warning{background:#fff8ea;border:1px solid #ead4a6;color:#77510a;border-radius:8px;padding:11px 12px;line-height:1.4}
-@media(max-width:900px){.profiles{grid-template-columns:repeat(2,1fr)}.manager-top{grid-template-columns:1fr}.manager-list{display:grid;grid-template-columns:repeat(2,1fr)}}@media(max-width:700px){.page{padding:0}.hero{border-radius:0}.shell{border-radius:0}.profiles{grid-template-columns:1fr}.order-strip{grid-template-columns:1fr}.content,.setup{padding:16px}.loaded,.group-head{align-items:flex-start;flex-direction:column}.section-head{align-items:flex-start;flex-direction:column}}@media print{body{background:#fff}.page{max-width:none;padding:0}.hero{border-radius:0}.shell{box-shadow:none}.setup,.actions,details,.section-head button{display:none!important}.content{display:block!important;padding:18px}.group{break-inside:avoid}.transaction-total{background:#fff;color:#000;border:2px solid #000}.modal-backdrop{display:none!important}}
+:root{--navy:#12384a;--teal:#0b7894;--teal-dark:#075f76;--bg:#eef3f6;--line:#d7e1e6;--soft:#f5f8fa;--text:#17242b;--muted:#657780;--warn:#a86200;--danger:#a63333;--good:#176b49;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px "Segoe UI",Arial,sans-serif}.page{max-width:1180px;margin:auto;padding:26px 18px 52px}.hero{background:var(--navy);color:#fff;padding:18px 22px;border-radius:12px 12px 0 0}.hero h1{margin:0;font-size:22px}.hero p{margin:5px 0 0;opacity:.85}.shell{background:#fff;border-radius:0 0 12px 12px;box-shadow:0 8px 28px rgba(30,62,78,.11);overflow:hidden}.setup{padding:20px 22px;border-bottom:1px solid var(--line)}.step-title{font-weight:800;color:var(--navy);margin-bottom:10px}.upload-card{max-width:760px;margin:auto;border:1px solid var(--line);background:#f8fbfc;border-radius:10px;padding:18px}.upload-title{text-align:center;font-size:16px;font-weight:800;color:var(--navy)}.upload-help{text-align:center;color:var(--muted);margin:5px 0 13px}.choose{display:flex;max-width:220px;margin:0 auto;align-items:center;justify-content:center;background:var(--teal);color:#fff;padding:10px 16px;border-radius:7px;font-weight:800;cursor:pointer}.choose:hover,.choose.drag{background:var(--teal-dark)}.choose input{display:none}.hint{text-align:center;font-size:12px;color:var(--muted);margin-top:9px}.match-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:15px auto 0;max-width:560px}.field label{display:block;font-size:12px;font-weight:800;color:var(--navy);margin-bottom:5px}.field-note{font-size:11px;color:var(--muted);margin-top:4px}.loaded{display:none;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--line);background:#f8fbfc;border-radius:9px;padding:11px 13px}.loaded-name{font-weight:800;color:var(--navy)}.loaded-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.loaded-meta{font-size:12px;color:var(--muted);margin-top:3px}.status{display:none;margin-top:12px;padding:10px 12px;border-radius:7px;background:var(--soft);color:var(--muted)}.status.show{display:block}.status.error{background:#fff2f2;color:var(--danger)}.content{display:none;padding:22px}.order-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}.meta{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 12px}.meta-label{text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-size:11px}.meta-value{font-weight:750;margin-top:3px}.match-card,.routing-card{border:1px solid var(--line);border-radius:9px;padding:14px;background:#fbfcfd;margin-bottom:16px}.match-card.good{border-color:#b8daca;background:#f1faf6}.match-card.warn{border-color:#ead4a6;background:#fff8ea}.match-title,.routing-title{font-weight:800;color:var(--navy);margin-bottom:8px}.match-grid{display:grid;grid-template-columns:1fr 1fr auto;gap:9px;align-items:end}.match-result{font-size:12px;margin-top:9px;line-height:1.45}.match-result strong{color:var(--navy)}.mode-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.mode-btn{background:#fff;color:var(--navy);border:1px solid var(--line);text-align:left;padding:12px}.mode-btn:hover{background:#f3f7f8}.mode-btn.active{border:2px solid var(--teal);background:#eef8fa}.mode-btn strong{display:block;margin-bottom:3px}.mode-btn span{font-size:12px;color:var(--muted);font-weight:500}.single-bucket{display:none;max-width:360px;margin-top:12px}.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}.section-title{margin:0;font-size:18px;color:var(--navy)}.summary-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:#fff}.split-table{width:100%;border-collapse:collapse;min-width:760px}.split-table th{padding:7px 10px;background:#edf3f5;color:var(--navy);text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.25px;border-bottom:1px solid var(--line)}.split-table td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.25}.split-table tbody tr:last-child td{border-bottom:0}.split-table .coding{font-weight:800;color:var(--navy)}.split-table .dept{text-align:center;width:85px}.split-table .memo{min-width:220px}.split-table .amount{text-align:right;width:115px;white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:800}.split-table .review-row{background:#fff8ea}.split-table .review-row .coding{color:var(--warn)}.split-table tfoot td{background:var(--navy);color:#fff;font-weight:800;padding:9px 10px;border:0}.split-table tfoot .total-label{text-align:right}.amount{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}.actions{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0 18px}button{border:0;border-radius:7px;padding:9px 13px;font:inherit;font-weight:750;cursor:pointer;background:var(--teal);color:#fff}button:hover{background:var(--teal-dark)}button.secondary{background:#e8eef1;color:var(--navy)}button.ghost{background:#fff;color:var(--navy);border:1px solid var(--line)}details{border:1px solid var(--line);border-radius:9px;overflow:hidden;background:#fff}summary{list-style:none;cursor:pointer;padding:13px 15px;font-weight:800;color:var(--navy);background:#f4f7f8}summary::-webkit-details-marker{display:none}summary:before{content:"▸";display:inline-block;margin-right:8px;transition:.15s}details[open] summary:before{transform:rotate(90deg)}.lines-wrap{overflow-x:auto}.lines-table{width:100%;min-width:1080px;border-collapse:collapse}.lines-table th{text-align:left;padding:10px 12px;background:#edf3f5;color:var(--navy);font-size:12px;text-transform:uppercase}.lines-table td{padding:10px 12px;border-top:1px solid var(--line);vertical-align:middle}.desc{max-width:390px;line-height:1.35}.sub{font-size:12px;color:var(--muted);margin-top:4px}.uncoded{background:#fff7e9}.review-note{font-size:12px;color:var(--warn);font-weight:800;margin-top:4px}select,input[type=text],input[type=number],input[type=date]{width:100%;border:1px solid #cbd7dc;border-radius:6px;padding:7px 8px;background:#fff;color:var(--text);font:inherit}.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(10,28,37,.55);z-index:20;padding:24px;overflow:auto}.modal-backdrop.show{display:block}.modal{max-width:900px;margin:20px auto;background:#fff;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.25);overflow:hidden}.modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--navy);color:#fff;padding:15px 18px}.modal-head h2{margin:0;font-size:18px}.modal-body{padding:18px}.manager-top{display:grid;grid-template-columns:220px 1fr;gap:12px;margin-bottom:16px}.manager-list{display:flex;flex-direction:column;gap:7px}.manager-cat{background:#fff;color:var(--navy);border:1px solid var(--line);text-align:left}.manager-cat.active{background:var(--navy);color:#fff}.rule-card{border:1px solid var(--line);border-radius:9px;padding:14px;background:#fbfcfd}.rule-card h3{margin:0 0 5px;color:var(--navy)}.rule-code{font-size:12px;color:var(--muted);margin-bottom:12px}.keyword-list{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}.keyword{display:inline-flex;align-items:center;gap:6px;background:#eaf1f4;border:1px solid #d2e0e6;border-radius:999px;padding:5px 8px}.keyword button{padding:0;background:transparent;color:var(--danger);font-size:15px}.add-keyword{display:flex;gap:8px}.add-keyword input{flex:1}.manager-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}.close-x{background:transparent;padding:3px 7px;font-size:20px}.close-x:hover{background:rgba(255,255,255,.15)}
+@media(max-width:900px){.order-strip{grid-template-columns:repeat(2,1fr)}.mode-row{grid-template-columns:1fr}.manager-top{grid-template-columns:1fr}.manager-list{display:grid;grid-template-columns:repeat(2,1fr)}}@media(max-width:700px){.page{padding:0}.hero{border-radius:0}.shell{border-radius:0}.order-strip,.match-fields,.match-grid{grid-template-columns:1fr}.content,.setup{padding:16px}.loaded{align-items:flex-start;flex-direction:column}.section-head{align-items:flex-start;flex-direction:column}}@media print{body{background:#fff}.page{max-width:none;padding:0}.hero{border-radius:0}.shell{box-shadow:none}.setup,.actions,details,.routing-card,.match-card,.section-head button{display:none!important}.content{display:block!important;padding:18px}.modal-backdrop{display:none!important}}
 </style>
 </head>
 <body>
 <div class="page">
-  <header class="hero"><h1>Amazon PDF Splitter</h1><p>Choose the purchasing category, upload the Amazon PDF, and use the grouped Ramp split.</p></header>
+  <header class="hero"><h1>Amazon PDF Splitter</h1><p>Drop in the Amazon PDF, match the Ramp charge when needed, and let the tool route the items.</p></header>
   <div class="shell">
     <section class="setup">
-      <div class="step-title">1. Choose Purchasing Category</div>
-      <div class="profiles" id="profileRow">
-        <button class="profile active" data-profile="gsc">📦 GSC</button>
-        <button class="profile" data-profile="hsk">🧹 HSK Supplies</button>
-        <button class="profile" data-profile="linen">🛏️ Linen</button>
-        <button class="profile" data-profile="unit">🏠 Unit Supplies</button>
-        <button class="profile" data-profile="fb">🍽️ F&amp;B</button>
-      </div>
-      <div class="step-title">2. Upload Amazon PDF</div>
       <div class="upload-card" id="uploadCard">
         <div class="upload-title">Upload Amazon Receipt or Order Details PDF</div>
-        <div class="upload-help" id="profileHelp">GSC – Guest Stay Consumables selected.</div>
+        <div class="upload-help">No bucket selection required before upload.</div>
         <label class="choose" id="dropZone"><input id="pdfInput" type="file" accept="application/pdf,.pdf"><span>Choose PDF</span></label>
         <div class="hint">You can also drag and drop the PDF here.</div>
+        <div class="match-fields">
+          <div class="field"><label>Ramp Transaction Amount (optional)</label><input id="rampAmountBefore" type="number" min="0" step="0.01" placeholder="169.90"><div class="field-note">Use this when the Amazon order total is larger than the Ramp charge.</div></div>
+          <div class="field"><label>Ramp Transaction Date (optional)</label><input id="rampDateBefore" type="date"><div class="field-note">Helps when the same amount appears more than once.</div></div>
+        </div>
       </div>
-      <div class="loaded" id="loadedBar"><div><div class="loaded-name" id="loadedName"></div><div class="loaded-meta" id="loadedMeta"></div></div><div class="loaded-actions"><button class="ghost" id="changeCategoryBtn">Change Category</button><button class="secondary" id="changeBtn">Change PDF</button></div></div>
+      <div class="loaded" id="loadedBar"><div><div class="loaded-name" id="loadedName"></div><div class="loaded-meta" id="loadedMeta"></div></div><div class="loaded-actions"><button class="secondary" id="changeBtn">Change PDF</button></div></div>
       <div class="status" id="status"></div>
     </section>
 
@@ -38,25 +33,35 @@
       <div class="order-strip">
         <div class="meta"><div class="meta-label">Order Number</div><div class="meta-value" id="orderNumber">—</div></div>
         <div class="meta"><div class="meta-label">Order Date</div><div class="meta-value" id="orderDate">—</div></div>
-        <div class="meta"><div class="meta-label">Transaction Total</div><div class="meta-value" id="transactionTotal">$0.00</div></div>
+        <div class="meta"><div class="meta-label">Amazon Order Total</div><div class="meta-value" id="orderTotal">$0.00</div></div>
+        <div class="meta"><div class="meta-label">Ramp Split Total</div><div class="meta-value" id="transactionTotal">$0.00</div></div>
       </div>
+
+      <div class="match-card" id="matchCard">
+        <div class="match-title">🔎 Ramp Transaction Match</div>
+        <div class="match-grid">
+          <div class="field"><label>Ramp Transaction Amount</label><input id="rampAmount" type="number" min="0" step="0.01" placeholder="Optional"></div>
+          <div class="field"><label>Transaction Date</label><input id="rampDate" type="date"></div>
+          <button id="matchBtn">Apply Match</button>
+        </div>
+        <div class="match-result" id="matchResult">No Ramp amount entered. The full Amazon order is included.</div>
+      </div>
+
+      <div class="routing-card">
+        <div class="routing-title">How should I sort the items?</div>
+        <div class="mode-row">
+          <button class="mode-btn active" data-mode="auto"><strong>✨ Auto Choose</strong><span>Choose the bucket and coding from your saved keywords.</span></button>
+          <button class="mode-btn" data-mode="single"><strong>📦 One Bucket</strong><span>Put every matched item into one purchasing bucket.</span></button>
+          <button class="mode-btn" data-mode="mixed"><strong>🔀 Mixed</strong><span>Start with suggestions, then assign buckets item by item.</span></button>
+        </div>
+        <div class="single-bucket" id="singleBucketWrap"><div class="field"><label>Bucket for all items</label><select id="singleBucket"></select></div></div>
+      </div>
+
       <div class="section-head"><h2 class="section-title">Ramp Split</h2><button class="ghost" id="managerBtn">⚙ Manage Keywords</button></div>
       <div class="summary-wrap" id="summaryWrap"></div>
       <div class="actions"><button id="copyBtn">Copy Ramp Split</button><button id="printBtn">Print PDF</button><button class="secondary" id="newBtn">Upload New PDF</button></div>
-      <details id="reviewDetails"><summary>Review Items</summary><div class="lines-wrap"><table class="lines-table"><thead><tr><th>Description</th><th style="width:300px">Coding</th><th style="width:190px">Memo</th><th class="amount" style="width:115px">Amount</th></tr></thead><tbody id="linesBody"></tbody></table></div></details>
+      <details id="reviewDetails"><summary>Review Items</summary><div class="lines-wrap"><table class="lines-table"><thead><tr><th>Description</th><th style="width:165px">Bucket</th><th style="width:300px">Coding</th><th style="width:180px">Memo</th><th class="amount" style="width:115px">Amount</th></tr></thead><tbody id="linesBody"></tbody></table></div></details>
     </main>
-  </div>
-</div>
-
-
-<div class="modal-backdrop" id="categoryModal">
-  <div class="modal" style="max-width:680px">
-    <div class="modal-head"><h2>Change Purchasing Category</h2><button class="close-x" id="closeCategory" aria-label="Close">×</button></div>
-    <div class="modal-body">
-      <div class="category-warning">Changing the category will replace the current coding selections and reclassify the extracted items. The uploaded PDF will remain open.</div>
-      <div class="category-picker" id="categoryPicker"></div>
-      <div class="manager-actions"><button class="secondary" id="cancelCategory">Cancel</button></div>
-    </div>
   </div>
 </div>
 
@@ -65,13 +70,10 @@
     <div class="modal-head"><h2>Keyword Manager</h2><button class="close-x" id="closeManager" aria-label="Close">×</button></div>
     <div class="modal-body">
       <div class="manager-top">
-        <div><label><strong>Purchasing Category</strong></label><select id="managerProfile"></select></div>
-        <div><strong>How it works</strong><div class="sub">Add product words or phrases that should map to each coding option. Changes are saved in this browser.</div></div>
+        <div><label><strong>Purchasing Bucket</strong></label><select id="managerProfile"></select></div>
+        <div><strong>How it works</strong><div class="sub">Auto Choose and Mixed use these keywords to select a bucket and coding option. Changes are saved in this browser.</div></div>
       </div>
-      <div class="manager-top">
-        <div class="manager-list" id="managerCategoryList"></div>
-        <div class="rule-card" id="managerEditor"></div>
-      </div>
+      <div class="manager-top"><div class="manager-list" id="managerCategoryList"></div><div class="rule-card" id="managerEditor"></div></div>
       <div class="manager-actions"><button class="secondary" id="resetKeywords">Restore Default Keywords</button><button id="doneManager">Done</button></div>
     </div>
   </div>
@@ -84,7 +86,8 @@ pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/p
 const $=id=>document.getElementById(id);
 const money=n=>`$${Number(n||0).toFixed(2)}`;
 const normalize=s=>(s||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').replace(/\s+/g,' ').trim();
-const esc=s=>(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+const cents=n=>Math.round(Number(n||0)*100);
 
 const PROFILE_META={
   gsc:{name:'GSC – Guest Stay Consumables',short:'GSC'},
@@ -149,125 +152,110 @@ const PROFILE_OPTIONS={
 };
 
 const DEFAULT_RULES=JSON.parse(JSON.stringify(PROFILE_OPTIONS));
-const STORAGE_KEY='amazonPdfSplitterKeywordRulesV2';
-let profile='gsc', purchaseLines=[], receiptTotal=0, currentFile=null, rules=loadRules(), managerSelectedCode='';
+const STORAGE_KEY='amazonPdfSplitterKeywordRulesV3';
+let mode='auto', singleProfile='gsc', allLines=[], purchaseLines=[], parsedReceipt=null, currentFile=null, rules=loadRules(), managerSelectedCode='';
 
-function loadRules(){try{const saved=JSON.parse(localStorage.getItem(STORAGE_KEY));if(saved&&typeof saved==='object'){const merged=JSON.parse(JSON.stringify(PROFILE_OPTIONS));for(const p of Object.keys(merged)){if(Array.isArray(saved[p])){for(const opt of merged[p]){const prior=saved[p].find(x=>x.code===opt.code);if(prior&&Array.isArray(prior.keywords))opt.keywords=prior.keywords}}}return merged}}catch{}return JSON.parse(JSON.stringify(PROFILE_OPTIONS))}
+function loadRules(){try{const saved=JSON.parse(localStorage.getItem(STORAGE_KEY));if(saved&&typeof saved==='object'){const merged=JSON.parse(JSON.stringify(PROFILE_OPTIONS));for(const p of Object.keys(merged)){if(Array.isArray(saved[p]))for(const opt of merged[p]){const prior=saved[p].find(x=>x.code===opt.code);if(prior&&Array.isArray(prior.keywords))opt.keywords=prior.keywords}}return merged}}catch{}return JSON.parse(JSON.stringify(PROFILE_OPTIONS))}
 function saveRules(){localStorage.setItem(STORAGE_KEY,JSON.stringify(rules))}
-function profileOptions(p=profile){return PROFILE_OPTIONS[p]}
-function profileRules(p=profile){return rules[p]}
-function optionByCode(code,p=profile){return profileOptions(p).find(x=>x.code===code)}
-function suggestMemo(description,code,defaultMemo=''){
+function profileOptions(p){return PROFILE_OPTIONS[p]||[]}
+function profileRules(p){return rules[p]||[]}
+function optionByCode(code,p){return profileOptions(p).find(x=>x.code===code)}
+function suggestMemo(description,p,code,defaultMemo=''){
  const text=normalize(description);
- if(profile==='hsk'){
-  const checks=[
-   ['rinseroo','Bathtub Sprayer'],['tub hose','Bathtub Sprayer'],['faucet sprayer','Bathtub Sprayer'],
-   ['hair remover','Hair Remover Tool'],['drain snake','Hair Remover Tool'],
-   ['moth trap','Moth Traps'],['extension cord','Extension Cord'],['knee pad','Knee Pads'],
-   ['cleaning caddy','Cleaning Caddy'],['utility bucket','Utility Bucket'],['mop handle','Mop Handle'],
-   ['squeegee','Squeegee'],['dustpan','Dustpan'],['duster','Duster'],['scrub brush','Cleaning Brush'],
-   ['white revive','Laundry Whitener'],['whitener','Laundry Whitener'],['stain remover','Stain Remover'],
-   ['laundry detergent','Laundry Detergent'],['detergent pac','Laundry Detergent'],['fabric softener','Fabric Softener'],['dryer sheet','Dryer Sheets'],
-   ['magic eraser','Magic Erasers'],['melamine sponge','Magic Erasers'],['clorox clean up','Bleach Cleaner'],
-   ['bleach spray','Bleach Cleaner'],['glass cleaner','Glass Cleaner'],['bathroom cleaner','Bathroom Cleaner'],
-   ['disinfectant','Disinfectant Cleaner'],['all purpose cleaner','All Purpose Cleaner'],['trash bag','Trash Bags'],
-   ['garbage bag','Trash Bags'],['mop head','Mop Supplies'],['sponge','Cleaning Sponges']
-  ];
+ if(p==='hsk'){
+  const checks=[['rinseroo','Bathtub Sprayer'],['tub hose','Bathtub Sprayer'],['faucet sprayer','Bathtub Sprayer'],['hair remover','Hair Remover Tool'],['drain snake','Hair Remover Tool'],['moth trap','Moth Traps'],['extension cord','Extension Cord'],['knee pad','Knee Pads'],['cleaning caddy','Cleaning Caddy'],['utility bucket','Utility Bucket'],['mop handle','Mop Handle'],['squeegee','Squeegee'],['dustpan','Dustpan'],['duster','Duster'],['scrub brush','Cleaning Brush'],['white revive','Laundry Whitener'],['whitener','Laundry Whitener'],['stain remover','Stain Remover'],['laundry detergent','Laundry Detergent'],['detergent pac','Laundry Detergent'],['fabric softener','Fabric Softener'],['dryer sheet','Dryer Sheets'],['magic eraser','Magic Erasers'],['melamine sponge','Magic Erasers'],['clorox clean up','Bleach Cleaner'],['bleach spray','Bleach Cleaner'],['glass cleaner','Glass Cleaner'],['bathroom cleaner','Bathroom Cleaner'],['disinfectant','Disinfectant Cleaner'],['all purpose cleaner','All Purpose Cleaner'],['trash bag','Trash Bags'],['garbage bag','Trash Bags'],['mop head','Mop Supplies'],['sponge','Cleaning Sponges']];
   for(const [keyword,memo] of checks)if(text.includes(normalize(keyword)))return memo;
  }
  return defaultMemo;
 }
-function classify(description){const text=normalize(description), candidates=[];for(const rule of profileRules()){for(const keyword of rule.keywords||[]){const k=normalize(keyword);if(k&&text.includes(k))candidates.push({rule,score:k.length})}}if(!candidates.length)return{coding:'',memo:''};candidates.sort((a,b)=>b.score-a.score);const rule=candidates[0].rule;return{coding:rule.code,memo:suggestMemo(description,rule.code,rule.memo)}}
+function classifyInProfile(description,p){const text=normalize(description),candidates=[];for(const rule of profileRules(p)){for(const keyword of rule.keywords||[]){const k=normalize(keyword);if(k&&text.includes(k))candidates.push({rule,score:k.length})}}if(!candidates.length)return{profile:p,coding:'',memo:''};candidates.sort((a,b)=>b.score-a.score);const rule=candidates[0].rule;return{profile:p,coding:rule.code,memo:suggestMemo(description,p,rule.code,rule.memo),score:candidates[0].score}}
+function classifyAny(description){const matches=[];for(const p of Object.keys(PROFILE_META)){const c=classifyInProfile(description,p);if(c.coding)matches.push(c)}if(!matches.length)return{profile:'',coding:'',memo:''};matches.sort((a,b)=>(b.score||0)-(a.score||0));return matches[0]}
+function applyRouting(){for(const line of allLines){let c;if(mode==='single')c=classifyInProfile(line.description,singleProfile);else c=classifyAny(line.description);line.profile=c.profile|| (mode==='single'?singleProfile:'');line.coding=c.coding;line.memo=c.memo}renderLines();renderSummary();updateStatusAfterRouting()}
 
-function codingOptions(selected=''){let html='<option value="">Review Required</option>';for(const opt of profileOptions())html+=`<option value="${esc(opt.code)}" ${selected===opt.code?'selected':''}>${esc(opt.code)}</option>`;return html}
+function bucketOptions(selected='',disabled=false){return Object.entries(PROFILE_META).map(([k,v])=>`<option value="${k}" ${selected===k?'selected':''}>${esc(v.short)}</option>`).join('')}
+function codingOptions(p,selected=''){let html='<option value="">Review Required</option>';for(const opt of profileOptions(p))html+=`<option value="${esc(opt.code)}" ${selected===opt.code?'selected':''}>${esc(opt.code)}</option>`;return html}
+function populateBucketSelects(){const html=Object.entries(PROFILE_META).map(([k,v])=>`<option value="${k}">${esc(v.name)}</option>`).join('');$('singleBucket').innerHTML=html;$('singleBucket').value=singleProfile}
 
 async function pageLines(page){const c=await page.getTextContent(),rows=[];for(const item of c.items){const text=(item.str||'').trim();if(!text)continue;const x=item.transform[4],y=item.transform[5];let row=rows.find(r=>Math.abs(r.y-y)<=2.5);if(!row){row={y,items:[]};rows.push(row)}row.items.push({x,text})}rows.sort((a,b)=>b.y-a.y);return rows.map(r=>r.items.sort((a,b)=>a.x-b.x).map(i=>i.text).join(' ').replace(/\s+/g,' ').trim())}
-function allocateTax(items,tax){let cents=Math.round((tax||0)*100),subtotal=items.reduce((s,x)=>s+x.amount,0);if(!items.length||!cents||!subtotal){items.forEach(x=>x.tax=0);return}const allocations=items.map((x,i)=>{const exact=cents*x.amount/subtotal,floor=Math.floor(exact);return{i,floor,remainder:exact-floor}});let used=allocations.reduce((s,x)=>s+x.floor,0);allocations.sort((a,b)=>b.remainder-a.remainder||a.i-b.i);for(let i=0;i<cents-used;i++)allocations[i].floor++;allocations.sort((a,b)=>a.i-b.i);allocations.forEach(x=>items[x.i].tax=x.floor/100)}
+function allocateTax(items,tax){let ct=cents(tax),subtotal=items.reduce((s,x)=>s+x.amount,0);if(!items.length||!ct||!subtotal){items.forEach(x=>x.tax=0);return}const allocations=items.map((x,i)=>{const exact=ct*x.amount/subtotal,floor=Math.floor(exact);return{i,floor,remainder:exact-floor}});let used=allocations.reduce((s,x)=>s+x.floor,0);allocations.sort((a,b)=>b.remainder-a.remainder||a.i-b.i);for(let i=0;i<ct-used;i++)allocations[i%allocations.length].floor++;allocations.sort((a,b)=>a.i-b.i);allocations.forEach(x=>items[x.i].tax=x.floor/100)}
+function parseMoney(s){return Number(String(s||'').replace(/[$,USD\s]/gi,''))||0}
+function normalizeDateText(s){const d=new Date(s);if(Number.isNaN(d.getTime()))return '';return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 
 function parseAmazon(lines){
  const joined=lines.join('\n');
  const order=(joined.match(/\b\d{3}-\d{7}-\d{7}\b/)||[])[0]||'—';
- const dateMatch=joined.match(/(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s+\d{4}/i);
- const rampTotals=[...joined.matchAll(/(?:^|\s)Total:\s*\$([\d,]+\.\d{2})/gmi)];
- const rampTotal=rampTotals.length?+rampTotals.at(-1)[1].replace(/,/g,''):0;
+ const placed=joined.match(/Order Placed:\s*((?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s+\d{4})/i);
+ const firstDate=joined.match(/(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s+\d{4}/i);
  const orderTotalMatch=joined.match(/(?:Order Total|Grand Total):\s*(?:USD\s*)?\$?([\d,]+\.\d{2})/i);
- const orderTotal=orderTotalMatch?+orderTotalMatch[1].replace(/,/g,''):0;
- const estimatedTax=joined.match(/Estimated tax(?: to be collected)?:\s*(?:USD\s*)?\$?([\d,]+\.\d{2})/i);
- const salesTaxes=[...joined.matchAll(/Sales Tax:\s*\$([\d,]+\.\d{2})/gi)];
- const aggregateTax=estimatedTax?+estimatedTax[1].replace(/,/g,''):(salesTaxes.length?+salesTaxes.at(-1)[1].replace(/,/g,''):0);
- const isOrderDetails=/Details for Order|Items Ordered/i.test(joined)&&/\d+\s+of:/i.test(joined);
- const items=[];
-
- if(isOrderDetails){
-  let current=null,shipmentItems=[];
-  const stop=/^(?:Sold by|Seller Credentials:|Business Price|Condition:|Shipping Address:|Shipping Speed:|Items Ordered|Payment information|Payment Method:|Billing address|Item\(s\) Subtotal:|Shipping & Handling:|Total before tax:|Total for This Shipment:|Grand Total:|Order Total:|Cost center:|Location:|PO number|Amazon\.com order number|Details for Order|To view the status|Conditions of Use)/i;
-  const finishShipmentTax=(tax)=>{if(shipmentItems.length&&tax>0)allocateTax(shipmentItems,tax);shipmentItems=[]};
-  for(const raw of lines){
-   const line=raw.replace(/\s+/g,' ').trim();
-   if(/^(?:Not Yet Shipped|Shipped on)/i.test(line)){shipmentItems=[];current=null;continue}
-   let m=line.match(/^(\d+)\s+of:\s*(.*?)\s+\$([\d,]+\.\d{2})$/i);
-   if(m){current={description:m[2],qty:+m[1],unitPrice:+m[3].replace(/,/g,''),tax:0};current.amount=+(current.qty*current.unitPrice).toFixed(2);items.push(current);shipmentItems.push(current);continue}
-   m=line.match(/^(\d+)\s+of:\s*(.*)$/i);
-   if(m){current={description:m[2],qty:+m[1],unitPrice:0,amount:0,tax:0};items.push(current);shipmentItems.push(current);continue}
-   if(current&&!current.unitPrice&&(m=line.match(/^\$([\d,]+\.\d{2})$/))){current.unitPrice=+m[1].replace(/,/g,'');current.amount=+(current.qty*current.unitPrice).toFixed(2);continue}
-   m=line.match(/^Sales Tax:\s*(?:USD\s*)?\$?([\d,]+\.\d{2})$/i);
-   if(m){finishShipmentTax(+m[1].replace(/,/g,''));current=null;continue}
-   if(stop.test(line)){current=null;continue}
-   if(current&&line&&!/^[-]+$/.test(line)&&!/^\$[\d,]+\.\d{2}$/.test(line))current.description+=` ${line}`
-  }
-  for(let i=items.length-1;i>=0;i--)if(!items[i].unitPrice||!items[i].description)items.splice(i,1);
-  const assignedTax=items.reduce((s,x)=>s+(x.tax||0),0);
-  if(!assignedTax&&aggregateTax)allocateTax(items,aggregateTax);
- }else{
-  let buffer=[],current=null,inTable=false;
-  for(const raw of lines){
-   const line=raw.replace(/\s+/g,' ').trim();
-   if(/^Description\b/i.test(line)){inTable=true;buffer=[];current=null;continue}
-   if(!inTable)continue;
-   if(/^Total:\s*\$|^Taxes:/i.test(line))break;
-   let m=line.match(/^Tax\s+\$([\d,]+\.\d{2})$/i);
-   if(m&&current){current.tax=+m[1].replace(/,/g,'');continue}
-   m=line.match(/^Shipping\s+\$([\d,]+\.\d{2})$/i);
-   if(m&&current){current.shipping=+m[1].replace(/,/g,'');continue}
-   m=line.match(/^Discount\s+-?\$([\d,]+\.\d{2})$/i);
-   if(m&&current)continue;
-   if(/^Cost center:|^Location:/i.test(line))continue;
-   m=line.match(/^(.*?)\s+(\d+)\s+\$([\d,]+\.\d{2})\s+\$([\d,]+\.\d{2})$/);
-   if(m){current={description:[...buffer,m[1]].filter(Boolean).join(' ').trim(),qty:+m[2],unitPrice:+m[3].replace(/,/g,''),amount:+m[4].replace(/,/g,''),tax:0,shipping:0};items.push(current);buffer=[];continue}
-   m=line.match(/^(\d+)\s+\$([\d,]+\.\d{2})\s+\$([\d,]+\.\d{2})$/);
-   if(m&&buffer.length){current={description:buffer.join(' ').trim(),qty:+m[1],unitPrice:+m[2].replace(/,/g,''),amount:+m[3].replace(/,/g,''),tax:0,shipping:0};items.push(current);buffer=[];continue}
-   if(line&&!/^Quantity\b|^Unit Price\b|^Amount\b/i.test(line))buffer.push(line)
-  }
+ const orderTotal=orderTotalMatch?parseMoney(orderTotalMatch[1]):0;
+ const transactions=[];
+ for(const line of lines){const m=line.match(/(?:Visa|Mastercard|American Express|Amex|Discover)(?:\s+ending\s+in|\s*\|\s*Last digits:)?\s*\d*:?\s*((?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s+\d{4})\s*:\s*\$([\d,]+\.\d{2})/i);if(m)transactions.push({dateText:m[1],date:normalizeDateText(m[1]),amount:parseMoney(m[2])})}
+ const shipments=[];let shipment=null,current=null;
+ const newShipment=dateText=>{shipment={dateText,date:normalizeDateText(dateText),items:[],tax:0,total:0};shipments.push(shipment);current=null};
+ const stop=/^(?:Sold by|Seller Credentials:|Business Price|Condition:|Shipping Address:|Shipping Speed:|Items Ordered|Not Yet Shipped|Payment information|Payment Method:|Billing address|Item\(s\) Subtotal:|Shipping & Handling:|Total before tax:|Cost center:|Location:|PO number|Amazon\.com order number|Final Details for Order|Details for Order|To view the status|Conditions of Use|United States|Scheduled Consolidated Delivery)/i;
+ for(const raw of lines){const line=raw.replace(/\s+/g,' ').trim();if(!line)continue;let m=line.match(/^Shipped on\s+((?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s+\d{4})/i);if(m){newShipment(m[1]);continue}
+  if(!shipment)continue;
+  m=line.match(/^(\d+)\s+of:\s*(.*?)\s+\$([\d,]+\.\d{2})$/i);if(m){current={description:m[2],qty:+m[1],unitPrice:parseMoney(m[3]),amount:+(+m[1]*parseMoney(m[3])).toFixed(2),tax:0,shipmentDate:shipment.date,shipmentDateText:shipment.dateText};shipment.items.push(current);continue}
+  m=line.match(/^(\d+)\s+of:\s*(.*)$/i);if(m){current={description:m[2],qty:+m[1],unitPrice:0,amount:0,tax:0,shipmentDate:shipment.date,shipmentDateText:shipment.dateText};shipment.items.push(current);continue}
+  if(current&&!current.unitPrice&&(m=line.match(/^\$([\d,]+\.\d{2})$/))){current.unitPrice=parseMoney(m[1]);current.amount=+(current.qty*current.unitPrice).toFixed(2);continue}
+  m=line.match(/^Sales Tax:\s*\$([\d,]+\.\d{2})/i);if(m){shipment.tax=parseMoney(m[1]);current=null;continue}
+  m=line.match(/^Total for This Shipment:\s*\$([\d,]+\.\d{2})/i);if(m){shipment.total=parseMoney(m[1]);current=null;continue}
+  if(stop.test(line)){current=null;continue}
+  if(current&&!/^[-]+$/.test(line)&&!/^\$[\d,]+\.\d{2}$/.test(line))current.description+=` ${line}`;
  }
- for(const item of items){item.description=item.description.replace(/\s+/g,' ').trim();item.shipping=item.shipping||0;item.lineTotal=+(item.amount+item.tax+item.shipping).toFixed(2);const c=classify(item.description);item.coding=c.coding;item.memo=c.memo}
- return{order,date:dateMatch?dateMatch[0]:'—',total:orderTotal||rampTotal,items};
+ for(const sh of shipments){sh.items=sh.items.filter(x=>x.unitPrice&&x.description);allocateTax(sh.items,sh.tax);for(const item of sh.items){item.description=item.description.replace(/\s+/g,' ').trim();item.lineTotal=+(item.amount+item.tax).toFixed(2)}if(!sh.total)sh.total=+sh.items.reduce((s,x)=>s+x.lineTotal,0).toFixed(2)}
+ let items=shipments.flatMap(s=>s.items);
+ if(!items.length){
+  const fallback=[];let buffer=[],current=null;
+  const skip=x=>!x||/^Description\b|^Quantity\b|^Unit Price\b|^Amount\b|^Card Used\b|^Order Number\b|^PO Number\b|^Visa\s*\(|^Unit Supplies\b|^Cost center:|^Location:|^Taxes:|^Total:/i.test(x)||/^\$[\d,]+\.\d{2}$/.test(x)||/^\d{3}-\d{7}-\d{7}$/.test(x)||/^(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s+\d{4}/i.test(x);
+  for(const raw of lines){const line=raw.replace(/\s+/g,' ').trim();let m=line.match(/^Tax\s+\$([\d,]+\.\d{2})$/i);if(m&&current){current.tax=parseMoney(m[1]);continue}m=line.match(/^Discount\s+-?\$([\d,]+\.\d{2})$/i);if(m&&current)continue;m=line.match(/^(.*?)\s+(\d+)\s+\$([\d,]+\.\d{2})\s+\$([\d,]+\.\d{2})$/);if(m){current={description:[...buffer,m[1]].filter(Boolean).join(' ').trim(),qty:+m[2],unitPrice:parseMoney(m[3]),amount:parseMoney(m[4]),tax:0,shipmentDate:'',shipmentDateText:''};fallback.push(current);buffer=[];continue}m=line.match(/^(\d+)\s+\$([\d,]+\.\d{2})\s+\$([\d,]+\.\d{2})$/);if(m&&buffer.length){current={description:buffer.join(' '),qty:+m[1],unitPrice:parseMoney(m[2]),amount:parseMoney(m[3]),tax:0,shipmentDate:'',shipmentDateText:''};fallback.push(current);buffer=[];continue}if(!skip(line))buffer.push(line)}
+  for(const item of fallback){item.description=item.description.replace(/\s+/g,' ').trim();item.lineTotal=+(item.amount+item.tax).toFixed(2)}
+  items=fallback;
+ }
+ if(!items.length)throw new Error('No Amazon purchase lines were found.');
+ return{order,date:(placed&&placed[1])||(firstDate&&firstDate[0])||'—',orderTotal:orderTotal||items.reduce((s,x)=>s+x.lineTotal,0),transactions,shipments,items};
 }
 
-function grouped(){const groups=new Map();purchaseLines.forEach((line,index)=>{const key=line.coding||'__review';const label=line.coding||'Review Required';if(!groups.has(key))groups.set(key,{key,label,memos:new Map(),total:0});const group=groups.get(key),memo=line.memo||(line.coding?'—':'Select coding below');group.memos.set(memo,(group.memos.get(memo)||0)+line.lineTotal);group.total+=line.lineTotal});return [...groups.values()]}
-function joinMemos(memos){const values=[...memos.keys()].filter(v=>v&&v!=='—'&&v!=='Select coding below');return values.length?values.join(', '):'Review Required'}
+function subsetForAmount(shipments,target){const t=cents(target),valid=shipments.filter(s=>s.items.length&&cents(s.total)>0);let best=null;function walk(i,sum,picked){if(sum===t){best=[...picked];return true}if(i>=valid.length||sum>t)return false;if(walk(i+1,sum+cents(valid[i].total),[...picked,valid[i]]))return true;return walk(i+1,sum,picked)}walk(0,0,[]);return best}
+function matchTransaction(amount,date=''){
+ if(!parsedReceipt)return;
+ const target=Number(amount||0);let selected=parsedReceipt.items, message='No Ramp amount entered. The full Amazon order is included.',kind='';
+ if(target>0){const exactTx=parsedReceipt.transactions.filter(t=>Math.abs(t.amount-target)<.011&&(!date||t.date===date));let tx=exactTx[0];let candidateShipments=[];
+  if(tx)candidateShipments=parsedReceipt.shipments.filter(s=>s.date===tx.date&&s.items.length);
+  if(candidateShipments.length&&Math.abs(candidateShipments.reduce((s,x)=>s+x.total,0)-target)<.011){selected=candidateShipments.flatMap(s=>s.items);message=`Exact Amazon card charge found: ${money(target)} on ${tx.dateText}. ${candidateShipments.length} shipment${candidateShipments.length===1?'':'s'} selected automatically.`;kind='good'}
+  else {const subset=subsetForAmount(parsedReceipt.shipments,target);if(subset){selected=subset.flatMap(s=>s.items);const dates=[...new Set(subset.map(s=>s.dateText))].join(', ');message=`Shipment total matched exactly to ${money(target)}${dates?` (${dates})`:''}. ${subset.length} shipment${subset.length===1?'':'s'} selected.`;kind='good'}else if(Math.abs(parsedReceipt.orderTotal-target)<.011){selected=parsedReceipt.items;message=`Ramp amount matches the full Amazon order total: ${money(target)}.`;kind='good'}else{selected=parsedReceipt.items;message=`I could not isolate an exact ${money(target)} shipment match. The full order remains selected for review.`;kind='warn'}}
+ }
+ allLines=selected.map(x=>({...x}));applyRouting();$('matchResult').innerHTML=`<strong>${esc(message)}</strong><br>${allLines.length} item line${allLines.length===1?'':'s'} included • ${money(allLines.reduce((s,x)=>s+x.lineTotal,0))}`;$('matchCard').className=`match-card${kind?' '+kind:''}`;$('transactionTotal').textContent=money(allLines.reduce((s,x)=>s+x.lineTotal,0));updateLoadedMeta();
+}
+
+function grouped(){const map=new Map();for(const line of allLines){const key=line.coding?`${line.profile}::${line.coding}`:'__review';if(!map.has(key))map.set(key,{key,profile:line.profile,label:line.coding||'Review Required',total:0,memos:new Map()});const g=map.get(key);g.total+=line.lineTotal;const memo=line.memo||'Review Required';g.memos.set(memo,(g.memos.get(memo)||0)+1)}return [...map.values()]}
+function joinMemos(memos){const values=[...memos.keys()].filter(v=>v&&v!=='—');return values.length?values.join(', '):'Review Required'}
 function hskParts(label){const m=(label||'').match(/^(\d{4})\s*-\s*(\d{3})\s*-\s*(.+)$/);return m?{gl:m[1],dept:m[2],description:m[3]}:{gl:label||'Review Required',dept:'—',description:''}}
-function renderSummary(){const wrap=$('summaryWrap'),groups=grouped();wrap.innerHTML='';if(!groups.length){wrap.innerHTML='<div class="empty">No purchase lines were found.</div>';return}const total=groups.reduce((s,g)=>s+g.total,0);let head='',rows='';if(profile==='hsk'){head='<tr><th style="width:85px">GL</th><th>Description</th><th class="dept">Dept</th><th>Memo</th><th class="amount">Amount</th></tr>';rows=groups.map(g=>{const review=g.key==='__review',p=review?{gl:'Review',dept:'—',description:'Required'}:hskParts(g.label);return `<tr class="${review?'review-row':''}"><td class="coding">${esc(p.gl)}</td><td>${esc(p.description)}</td><td class="dept">${esc(p.dept)}</td><td class="memo">${esc(joinMemos(g.memos))}</td><td class="amount">${money(g.total)}</td></tr>`}).join('')}else{head='<tr><th>Ramp Item</th><th>Memo</th><th class="amount">Amount</th></tr>';rows=groups.map(g=>`<tr class="${g.key==='__review'?'review-row':''}"><td class="coding">${esc(g.label)}</td><td class="memo">${esc(joinMemos(g.memos))}</td><td class="amount">${money(g.total)}</td></tr>`).join('')}wrap.innerHTML=`<table class="split-table"><thead>${head}</thead><tbody>${rows}</tbody><tfoot><tr><td class="total-label" colspan="${profile==='hsk'?4:2}">Transaction Total</td><td class="amount">${money(total)}</td></tr></tfoot></table>`}
-function renderLines(){const body=$('linesBody');body.innerHTML='';purchaseLines.forEach((line,i)=>{const tr=document.createElement('tr');if(!line.coding)tr.className='uncoded';const shipping=line.shipping?` + Shipping ${money(line.shipping)}`:'';tr.innerHTML=`<td class="desc">${esc(line.description)}<div class="sub">Item ${money(line.amount)} + Tax ${money(line.tax)}${shipping}</div>${line.coding?'':'<div class="review-note">Review Required</div>'}</td><td><select data-i="${i}" data-field="coding">${codingOptions(line.coding)}</select></td><td><input type="text" data-i="${i}" data-field="memo" value="${esc(line.memo)}"></td><td class="amount"><strong>${money(line.lineTotal)}</strong></td>`;body.appendChild(tr)});body.querySelectorAll('[data-field]').forEach(el=>el.addEventListener(el.dataset.field==='memo'?'input':'change',e=>{const i=+e.target.dataset.i,field=e.target.dataset.field;purchaseLines[i][field]=e.target.value;if(field==='coding'){const opt=optionByCode(e.target.value);purchaseLines[i].memo=opt?suggestMemo(purchaseLines[i].description,opt.code,opt.memo):'';renderLines()}else renderSummary()}));renderSummary()}
-
+function codingDisplay(g){if(g.key==='__review')return{coding:'Review Required',dept:'—'};if(g.profile==='hsk'){const p=hskParts(g.label);return{coding:`${p.gl} – ${p.description}`,dept:p.dept}}return{coding:g.label,dept:'—'}}
+function renderSummary(){const wrap=$('summaryWrap'),groups=grouped();if(!groups.length){wrap.innerHTML='<div class="sub" style="padding:20px">No purchase lines are selected.</div>';return}const rows=groups.map(g=>{const d=codingDisplay(g),review=g.key==='__review';return `<tr class="${review?'review-row':''}"><td>${esc(g.profile?PROFILE_META[g.profile].short:'Review')}</td><td class="coding">${esc(d.coding)}</td><td class="dept">${esc(d.dept)}</td><td class="memo">${esc(joinMemos(g.memos))}</td><td class="amount">${money(g.total)}</td></tr>`}).join('');const total=groups.reduce((s,g)=>s+g.total,0);wrap.innerHTML=`<table class="split-table"><thead><tr><th>Bucket</th><th>GL / Ramp Item</th><th class="dept">Dept</th><th>Memo</th><th class="amount">Amount</th></tr></thead><tbody>${rows}</tbody><tfoot><tr><td class="total-label" colspan="4">Transaction Total</td><td class="amount">${money(total)}</td></tr></tfoot></table>`;$('transactionTotal').textContent=money(total)}
+function renderLines(){const body=$('linesBody');body.innerHTML='';allLines.forEach((line,i)=>{const tr=document.createElement('tr');if(!line.coding)tr.className='uncoded';const bucketDisabled=mode==='single'?'disabled':'';tr.innerHTML=`<td class="desc">${esc(line.description)}<div class="sub">${line.shipmentDateText?`Shipped ${esc(line.shipmentDateText)} • `:''}Item ${money(line.amount)} + Tax ${money(line.tax)}</div>${line.coding?'':'<div class="review-note">Review Required</div>'}</td><td><select data-i="${i}" data-field="profile" ${bucketDisabled}>${bucketOptions(line.profile)}</select></td><td><select data-i="${i}" data-field="coding">${codingOptions(line.profile,line.coding)}</select></td><td><input type="text" data-i="${i}" data-field="memo" value="${esc(line.memo)}"></td><td class="amount"><strong>${money(line.lineTotal)}</strong></td>`;body.appendChild(tr)});
+ body.querySelectorAll('[data-field]').forEach(el=>el.addEventListener(el.dataset.field==='memo'?'input':'change',e=>{const i=+e.target.dataset.i,field=e.target.dataset.field,line=allLines[i];if(field==='profile'){line.profile=e.target.value;const c=classifyInProfile(line.description,line.profile);line.coding=c.coding;line.memo=c.memo;renderLines()}else if(field==='coding'){line.coding=e.target.value;const opt=optionByCode(line.coding,line.profile);line.memo=opt?suggestMemo(line.description,line.profile,opt.code,opt.memo):'';renderLines()}else{line.memo=e.target.value;renderSummary()} }));renderSummary()}
+function updateStatusAfterRouting(){const review=allLines.filter(x=>!x.coding).length;setStatus(review?`${allLines.length} matched line${allLines.length===1?'':'s'}. ${review} need review.`:`${allLines.length} matched line${allLines.length===1?'':'s'}. Ramp split is ready.`)}
 function setStatus(message,error=false){const s=$('status');s.textContent=message;s.className=`status show${error?' error':''}`}
-async function handleFile(file){if(!file||!/pdf/i.test(file.type||file.name))return setStatus('Please select a PDF file.',true);currentFile=file;try{setStatus('Reading Amazon PDF…');const pdf=await pdfjsLib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise,lines=[];for(let p=1;p<=pdf.numPages;p++)lines.push(...await pageLines(await pdf.getPage(p)));const parsed=parseAmazon(lines);if(!parsed.items.length)throw new Error('No Amazon purchase lines were found.');purchaseLines=parsed.items;receiptTotal=parsed.total||purchaseLines.reduce((s,x)=>s+x.lineTotal,0);$('orderNumber').textContent=parsed.order;$('orderDate').textContent=parsed.date;$('transactionTotal').textContent=money(receiptTotal);$('content').style.display='block';$('uploadCard').style.display='none';$('profileRow').style.display='none';$('loadedBar').style.display='flex';$('loadedName').textContent=file.name;updateLoadedMeta();renderLines();const reviewCount=purchaseLines.filter(x=>!x.coding).length;setStatus(reviewCount?`${purchaseLines.length} lines found. ${reviewCount} need review.`:`${purchaseLines.length} lines found. Ramp split is ready.`)}catch(error){console.error(error);$('content').style.display='none';setStatus(`I couldn't read this PDF: ${error.message}`,true)}}
-function reset(){purchaseLines=[];currentFile=null;$('pdfInput').value='';$('content').style.display='none';$('uploadCard').style.display='block';$('profileRow').style.display='grid';$('loadedBar').style.display='none';$('status').className='status';window.scrollTo({top:0,behavior:'smooth'})}
-function setProfile(next){profile=next;document.querySelectorAll('.profile').forEach(b=>b.classList.toggle('active',b.dataset.profile===profile));$('profileHelp').textContent=`${PROFILE_META[profile].name} selected.`}
-function updateLoadedMeta(){if(!currentFile)return;const order=$('orderNumber').textContent||'—';$('loadedMeta').textContent=`${PROFILE_META[profile].name} • Order ${order} • ${money(receiptTotal)}`}
-function openCategoryModal(){const picker=$('categoryPicker');picker.innerHTML=Object.entries(PROFILE_META).map(([key,value])=>`<button class="category-choice ${key===profile?'active':''}" data-category="${key}"><strong>${esc(value.short)}</strong><div class="sub">${esc(value.name)}</div></button>`).join('');picker.querySelectorAll('[data-category]').forEach(button=>button.onclick=()=>changeCategory(button.dataset.category));$('categoryModal').classList.add('show')}
-function closeCategoryModal(){$('categoryModal').classList.remove('show')}
-function changeCategory(next){if(next===profile){closeCategoryModal();return}profile=next;document.querySelectorAll('.profile').forEach(b=>b.classList.toggle('active',b.dataset.profile===profile));$('profileHelp').textContent=`${PROFILE_META[profile].name} selected.`;for(const line of purchaseLines){const c=classify(line.description);line.coding=c.coding;line.memo=c.memo}renderLines();updateLoadedMeta();const reviewCount=purchaseLines.filter(x=>!x.coding).length;setStatus(reviewCount?`Category changed to ${PROFILE_META[profile].name}. ${reviewCount} line${reviewCount===1?' needs':'s need'} review.`:`Category changed to ${PROFILE_META[profile].name}. Ramp split is ready.`);closeCategoryModal()}
+function updateLoadedMeta(){if(!currentFile||!parsedReceipt)return;$('loadedMeta').textContent=`Order ${parsedReceipt.order} • ${allLines.length} selected line${allLines.length===1?'':'s'} • ${money(allLines.reduce((s,x)=>s+x.lineTotal,0))}`}
 
-function openManager(){populateManagerProfiles();$('managerProfile').value=profile;managerSelectedCode=profileOptions(profile)[0].code;renderManager();$('managerModal').classList.add('show')}
-function closeManager(){$('managerModal').classList.remove('show');if(purchaseLines.length){for(const line of purchaseLines){if(!line.coding){const c=classify(line.description);line.coding=c.coding;line.memo=c.memo}}renderLines()}}
+async function handleFile(file){if(!file||!/pdf/i.test(file.type||file.name))return setStatus('Please select a PDF file.',true);currentFile=file;try{setStatus('Reading Amazon PDF…');const pdf=await pdfjsLib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise,lines=[];for(let p=1;p<=pdf.numPages;p++)lines.push(...await pageLines(await pdf.getPage(p)));parsedReceipt=parseAmazon(lines);$('orderNumber').textContent=parsedReceipt.order;$('orderDate').textContent=parsedReceipt.date;$('orderTotal').textContent=money(parsedReceipt.orderTotal);$('content').style.display='block';$('uploadCard').style.display='none';$('loadedBar').style.display='flex';$('loadedName').textContent=file.name;const amount=$('rampAmountBefore').value;$('rampAmount').value=amount;$('rampDate').value=$('rampDateBefore').value;matchTransaction(amount,$('rampDate').value);window.scrollTo({top:0,behavior:'smooth'})}catch(error){console.error(error);$('content').style.display='none';setStatus(`I couldn't read this PDF: ${error.message}`,true)}}
+function reset(){mode='auto';singleProfile='gsc';allLines=[];purchaseLines=[];parsedReceipt=null;currentFile=null;$('pdfInput').value='';$('rampAmountBefore').value='';$('rampDateBefore').value='';$('content').style.display='none';$('uploadCard').style.display='block';$('loadedBar').style.display='none';$('status').className='status';document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode==='auto'));$('singleBucketWrap').style.display='none';window.scrollTo({top:0,behavior:'smooth'})}
+function setMode(next){mode=next;document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));$('singleBucketWrap').style.display=mode==='single'?'block':'none';applyRouting()}
+
+function openManager(){populateManagerProfiles();$('managerProfile').value=singleProfile;managerSelectedCode=profileOptions($('managerProfile').value)[0].code;renderManager();$('managerModal').classList.add('show')}
+function closeManager(){$('managerModal').classList.remove('show');if(allLines.length)applyRouting()}
 function populateManagerProfiles(){$('managerProfile').innerHTML=Object.entries(PROFILE_META).map(([k,v])=>`<option value="${k}">${esc(v.name)}</option>`).join('')}
 function renderManager(){const p=$('managerProfile').value,opts=profileOptions(p);if(!opts.some(x=>x.code===managerSelectedCode))managerSelectedCode=opts[0].code;const list=$('managerCategoryList');list.innerHTML=opts.map(opt=>`<button class="manager-cat ${opt.code===managerSelectedCode?'active':''}" data-code="${esc(opt.code)}">${esc(opt.code)}</button>`).join('');list.querySelectorAll('[data-code]').forEach(b=>b.onclick=()=>{managerSelectedCode=b.dataset.code;renderManager()});const option=opts.find(x=>x.code===managerSelectedCode),rule=profileRules(p).find(x=>x.code===managerSelectedCode);$('managerEditor').innerHTML=`<h3>${esc(option.code)}</h3><div class="rule-code">Default memo: ${esc(option.memo)}</div><div class="keyword-list">${(rule.keywords||[]).map((k,i)=>`<span class="keyword">${esc(k)}<button data-remove="${i}" title="Remove">×</button></span>`).join('')||'<span class="sub">No keywords yet.</span>'}</div><div class="add-keyword"><input id="newKeyword" type="text" placeholder="Add a product word or phrase"><button id="addKeyword">Add Keyword</button></div>`;$('managerEditor').querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{rule.keywords.splice(+b.dataset.remove,1);saveRules();renderManager()});$('addKeyword').onclick=()=>{const input=$('newKeyword'),value=input.value.trim();if(value&&!rule.keywords.some(k=>normalize(k)===normalize(value))){rule.keywords.push(value);saveRules();renderManager()}};$('newKeyword').addEventListener('keydown',e=>{if(e.key==='Enter')$('addKeyword').click()})}
 
-for(const b of document.querySelectorAll('.profile'))b.addEventListener('click',()=>setProfile(b.dataset.profile));
+populateBucketSelects();
 $('pdfInput').addEventListener('change',e=>handleFile(e.target.files[0]));
 const drop=$('dropZone');for(const ev of ['dragenter','dragover'])drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('drag')});for(const ev of ['dragleave','drop'])drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('drag')});drop.addEventListener('drop',e=>handleFile(e.dataTransfer.files[0]));
-$('newBtn').onclick=reset;$('changeBtn').onclick=()=>{reset();setTimeout(()=>$('pdfInput').click(),100)};$('changeCategoryBtn').onclick=openCategoryModal;$('closeCategory').onclick=closeCategoryModal;$('cancelCategory').onclick=closeCategoryModal;$('categoryModal').addEventListener('click',e=>{if(e.target===$('categoryModal'))closeCategoryModal()});$('printBtn').onclick=()=>window.print();
-$('copyBtn').onclick=async()=>{const groups=grouped(),rows=[];if(profile==='hsk'){rows.push('GL\tDescription\tDept\tMemo\tAmount');for(const g of groups){const p=g.key==='__review'?{gl:'Review',description:'Required',dept:'—'}:hskParts(g.label);rows.push(`${p.gl}\t${p.description}\t${p.dept}\t${joinMemos(g.memos)}\t${money(g.total)}`)}rows.push(`\t\t\tTransaction Total\t${money(groups.reduce((s,g)=>s+g.total,0))}`)}else{rows.push('Ramp Item\tMemo\tAmount');for(const g of groups)rows.push(`${g.label}\t${joinMemos(g.memos)}\t${money(g.total)}`);rows.push(`\tTransaction Total\t${money(groups.reduce((s,g)=>s+g.total,0))}`)}const text=rows.join('\n');try{await navigator.clipboard.writeText(text);$('copyBtn').textContent='Copied';setTimeout(()=>$('copyBtn').textContent='Copy Ramp Split',1200)}catch{prompt('Copy Ramp Split:',text)}};
+document.querySelectorAll('.mode-btn').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
+$('singleBucket').onchange=e=>{singleProfile=e.target.value;applyRouting()};
+$('matchBtn').onclick=()=>matchTransaction($('rampAmount').value,$('rampDate').value);
+$('newBtn').onclick=reset;$('changeBtn').onclick=()=>{reset();setTimeout(()=>$('pdfInput').click(),100)};$('printBtn').onclick=()=>window.print();
+$('copyBtn').onclick=async()=>{const groups=grouped(),rows=['Bucket\tGL / Ramp Item\tDept\tMemo\tAmount'];for(const g of groups){const d=codingDisplay(g);rows.push(`${g.profile?PROFILE_META[g.profile].short:'Review'}\t${d.coding}\t${d.dept}\t${joinMemos(g.memos)}\t${money(g.total)}`)}rows.push(`\t\t\tTransaction Total\t${money(groups.reduce((s,g)=>s+g.total,0))}`);const text=rows.join('\n');try{await navigator.clipboard.writeText(text);$('copyBtn').textContent='Copied';setTimeout(()=>$('copyBtn').textContent='Copy Ramp Split',1200)}catch{prompt('Copy Ramp Split:',text)}};
 $('managerBtn').onclick=openManager;$('closeManager').onclick=closeManager;$('doneManager').onclick=closeManager;$('managerModal').addEventListener('click',e=>{if(e.target===$('managerModal'))closeManager()});$('managerProfile').onchange=()=>{managerSelectedCode=profileOptions($('managerProfile').value)[0].code;renderManager()};$('resetKeywords').onclick=()=>{const p=$('managerProfile').value;rules[p]=JSON.parse(JSON.stringify(DEFAULT_RULES[p]));saveRules();renderManager()};
 </script>
 </body>
