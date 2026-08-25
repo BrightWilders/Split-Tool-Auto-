@@ -276,7 +276,27 @@ const drop=$('dropZone');for(const ev of ['dragenter','dragover'])drop.addEventL
 document.querySelectorAll('.mode-btn').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
 $('singleBucket').onchange=e=>{singleProfile=e.target.value;applyRouting()};
 $('matchBtn').onclick=()=>matchTransaction($('rampAmount').value,$('rampDate').value);
-$('newBtn').onclick=reset;$('changeBtn').onclick=()=>{reset();setTimeout(()=>$('pdfInput').click(),100)};$('printBtn').onclick=()=>window.print();
+function printRampSplit(){
+ const summary=$('summaryWrap').innerHTML;
+ if(!summary||!allLines.length){setStatus('Upload and process an Amazon PDF before printing.','error');return;}
+ const order=$('orderNumber').textContent||'—';
+ const date=$('orderDate').textContent||'—';
+ const orderTotal=$('orderTotal').textContent||'$0.00';
+ const splitTotal=$('transactionTotal').textContent||'$0.00';
+ const frame=document.createElement('iframe');
+ frame.setAttribute('aria-hidden','true');
+ frame.style.position='fixed';frame.style.right='0';frame.style.bottom='0';frame.style.width='0';frame.style.height='0';frame.style.border='0';
+ document.body.appendChild(frame);
+ const doc=frame.contentDocument||frame.contentWindow.document;
+ doc.open();
+ doc.write(`<!doctype html><html><head><meta charset="utf-8"><title>Amazon Ramp Split</title><style>
+ @page{size:auto;margin:.45in}*{box-sizing:border-box}body{font-family:Arial,sans-serif;color:#17242b;margin:0;font-size:12px}h1{margin:0 0 4px;color:#12384a;font-size:20px}.subhead{color:#657780;margin-bottom:14px}.meta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}.meta{border:1px solid #d7e1e6;border-radius:6px;padding:8px}.label{text-transform:uppercase;font-size:9px;color:#657780;letter-spacing:.3px}.value{font-weight:700;margin-top:3px}.summary-wrap{border:1px solid #d7e1e6;border-radius:6px;overflow:hidden}.split-table{width:100%;border-collapse:collapse}.split-table th{padding:7px 8px;background:#edf3f5;color:#12384a;text-align:left;font-size:9px;text-transform:uppercase;border-bottom:1px solid #d7e1e6}.split-table td{padding:8px;border-bottom:1px solid #d7e1e6;vertical-align:top}.split-table .coding{font-weight:700;color:#12384a}.split-table .dept{text-align:center;width:65px}.split-table .amount{text-align:right;width:90px;white-space:nowrap;font-weight:700}.split-table tfoot td{background:#12384a;color:#fff;font-weight:700;border:0}.split-table tfoot .total-label{text-align:right}.review-row{background:#fff8ea}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+ </style></head><body><h1>Amazon Ramp Split</h1><div class="subhead">Prepared from Amazon receipt/order details</div><div class="meta-grid"><div class="meta"><div class="label">Order Number</div><div class="value">${esc(order)}</div></div><div class="meta"><div class="label">Order Date</div><div class="value">${esc(date)}</div></div><div class="meta"><div class="label">Amazon Order Total</div><div class="value">${esc(orderTotal)}</div></div><div class="meta"><div class="label">Ramp Split Total</div><div class="value">${esc(splitTotal)}</div></div></div><div class="summary-wrap">${summary}</div></body></html>`);
+ doc.close();
+ const doPrint=()=>{try{frame.contentWindow.focus();frame.contentWindow.print()}finally{setTimeout(()=>frame.remove(),1500)}};
+ if(doc.readyState==='complete')setTimeout(doPrint,150);else frame.onload=()=>setTimeout(doPrint,150);
+}
+$('newBtn').onclick=reset;$('changeBtn').onclick=()=>{reset();setTimeout(()=>$('pdfInput').click(),100)};$('printBtn').onclick=printRampSplit;
 $('copyBtn').onclick=async()=>{const groups=grouped(),rows=['Bucket\tGL / Ramp Item\tDept\tMemo\tAmount'];for(const g of groups){const d=codingDisplay(g);rows.push(`${g.profile?PROFILE_META[g.profile].short:'Review'}\t${d.coding}\t${d.dept}\t${joinMemos(g.memos)}\t${money(g.total)}`)}rows.push(`\t\t\tTransaction Total\t${money(groups.reduce((s,g)=>s+g.total,0))}`);const text=rows.join('\n');try{await navigator.clipboard.writeText(text);$('copyBtn').textContent='Copied';setTimeout(()=>$('copyBtn').textContent='Copy Ramp Split',1200)}catch{prompt('Copy Ramp Split:',text)}};
 $('managerBtn').onclick=openManager;$('closeManager').onclick=closeManager;$('doneManager').onclick=closeManager;$('managerModal').addEventListener('click',e=>{if(e.target===$('managerModal'))closeManager()});$('managerProfile').onchange=()=>{managerSelectedCode=profileOptions($('managerProfile').value)[0].code;renderManager()};$('resetKeywords').onclick=()=>{const p=$('managerProfile').value;rules[p]=JSON.parse(JSON.stringify(DEFAULT_RULES[p]));saveRules();renderManager()};
 </script>
