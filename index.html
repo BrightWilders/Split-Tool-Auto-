@@ -3,71 +3,48 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Receipt Splitter</title>
+<title>Amazon PDF Splitter</title>
 <style>
 :root{--navy:#12384a;--teal:#0b7894;--teal-dark:#075f76;--bg:#eef3f6;--line:#d7e1e6;--soft:#f5f8fa;--text:#17242b;--muted:#657780;--warn:#a86200;--danger:#a63333;--good:#176b49;--white:#fff}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px "Segoe UI",Arial,sans-serif}.page{max-width:1180px;margin:auto;padding:26px 18px 52px}.hero{background:var(--navy);color:#fff;padding:18px 22px;border-radius:12px 12px 0 0}.hero h1{margin:0;font-size:22px}.hero p{margin:5px 0 0;opacity:.85}.shell{background:#fff;border-radius:0 0 12px 12px;box-shadow:0 8px 28px rgba(30,62,78,.11);overflow:hidden}.setup{padding:20px 22px;border-bottom:1px solid var(--line)}.step-title{font-weight:800;color:var(--navy);margin-bottom:10px}.upload-card{max-width:760px;margin:auto;border:1px solid var(--line);background:#f8fbfc;border-radius:10px;padding:18px}.upload-title{text-align:center;font-size:16px;font-weight:800;color:var(--navy)}.upload-help{text-align:center;color:var(--muted);margin:5px 0 13px}.choose{display:flex;max-width:220px;margin:0 auto;align-items:center;justify-content:center;background:var(--teal);color:#fff;padding:10px 16px;border-radius:7px;font-weight:800;cursor:pointer}.choose:hover,.choose.drag{background:var(--teal-dark)}.choose input{display:none}.hint{text-align:center;font-size:12px;color:var(--muted);margin-top:9px}.match-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:15px auto 0;max-width:560px}.field label{display:block;font-size:12px;font-weight:800;color:var(--navy);margin-bottom:5px}.field-note{font-size:11px;color:var(--muted);margin-top:4px}.loaded{display:none;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--line);background:#f8fbfc;border-radius:9px;padding:11px 13px}.loaded-name{font-weight:800;color:var(--navy)}.loaded-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.loaded-meta{font-size:12px;color:var(--muted);margin-top:3px}.status{display:none;margin-top:12px;padding:10px 12px;border-radius:7px;background:var(--soft);color:var(--muted)}.status.show{display:block}.status.error{background:#fff2f2;color:var(--danger)}.content{display:none;padding:22px}.order-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}.meta{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 12px}.meta-label{text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-size:11px}.meta-value{font-weight:750;margin-top:3px}.match-card,.routing-card{border:1px solid var(--line);border-radius:9px;padding:14px;background:#fbfcfd;margin-bottom:16px}.match-card.good{border-color:#b8daca;background:#f1faf6}.match-card.warn{border-color:#ead4a6;background:#fff8ea}.match-title,.routing-title{font-weight:800;color:var(--navy);margin-bottom:8px}.match-grid{display:grid;grid-template-columns:1fr 1fr auto;gap:9px;align-items:end}.match-result{font-size:12px;margin-top:9px;line-height:1.45}.match-result strong{color:var(--navy)}.mode-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.mode-btn{background:#fff;color:var(--navy);border:1px solid var(--line);text-align:left;padding:12px}.mode-btn:hover{background:#f3f7f8}.mode-btn.active{border:2px solid var(--teal);background:#eef8fa}.mode-btn strong{display:block;margin-bottom:3px}.mode-btn span{font-size:12px;color:var(--muted);font-weight:500}.single-bucket{display:none;max-width:360px;margin-top:12px}.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}.section-title{margin:0;font-size:18px;color:var(--navy)}.summary-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:#fff}.split-table{width:100%;border-collapse:collapse;min-width:760px}.split-table th{padding:7px 10px;background:#edf3f5;color:var(--navy);text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.25px;border-bottom:1px solid var(--line)}.split-table td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.25}.split-table tbody tr:last-child td{border-bottom:0}.split-table .coding{font-weight:800;color:var(--navy)}.split-table .dept{text-align:center;width:85px}.split-table .memo{min-width:220px}.split-table .amount{text-align:right;width:115px;white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:800}.split-table .review-row{background:#fff8ea}.split-table .review-row .coding{color:var(--warn)}.split-table tfoot td{background:var(--navy);color:#fff;font-weight:800;padding:9px 10px;border:0}.split-table tfoot .total-label{text-align:right}.amount{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}.actions{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0 18px}button{border:0;border-radius:7px;padding:9px 13px;font:inherit;font-weight:750;cursor:pointer;background:var(--teal);color:#fff}button:hover{background:var(--teal-dark)}button.secondary{background:#e8eef1;color:var(--navy)}button.ghost{background:#fff;color:var(--navy);border:1px solid var(--line)}details{border:1px solid var(--line);border-radius:9px;overflow:hidden;background:#fff}summary{list-style:none;cursor:pointer;padding:13px 15px;font-weight:800;color:var(--navy);background:#f4f7f8}summary::-webkit-details-marker{display:none}summary:before{content:"▸";display:inline-block;margin-right:8px;transition:.15s}details[open] summary:before{transform:rotate(90deg)}.lines-wrap{overflow-x:auto}.lines-table{width:100%;min-width:1080px;border-collapse:collapse}.lines-table th{text-align:left;padding:10px 12px;background:#edf3f5;color:var(--navy);font-size:12px;text-transform:uppercase}.lines-table td{padding:10px 12px;border-top:1px solid var(--line);vertical-align:middle}.desc{max-width:390px;line-height:1.35}.sub{font-size:12px;color:var(--muted);margin-top:4px}.uncoded{background:#fff7e9}.review-note{font-size:12px;color:var(--warn);font-weight:800;margin-top:4px}select,input[type=text],input[type=number],input[type=date]{width:100%;border:1px solid #cbd7dc;border-radius:6px;padding:7px 8px;background:#fff;color:var(--text);font:inherit}.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(10,28,37,.55);z-index:20;padding:24px;overflow:auto}.modal-backdrop.show{display:block}.modal{max-width:900px;margin:20px auto;background:#fff;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.25);overflow:hidden}.modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--navy);color:#fff;padding:15px 18px}.modal-head h2{margin:0;font-size:18px}.modal-body{padding:18px}.manager-top{display:grid;grid-template-columns:220px 1fr;gap:12px;margin-bottom:16px}.manager-list{display:flex;flex-direction:column;gap:7px}.manager-cat{background:#fff;color:var(--navy);border:1px solid var(--line);text-align:left}.manager-cat.active{background:var(--navy);color:#fff}.rule-card{border:1px solid var(--line);border-radius:9px;padding:14px;background:#fbfcfd}.rule-card h3{margin:0 0 5px;color:var(--navy)}.rule-code{font-size:12px;color:var(--muted);margin-bottom:12px}.keyword-list{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}.keyword{display:inline-flex;align-items:center;gap:6px;background:#eaf1f4;border:1px solid #d2e0e6;border-radius:999px;padding:5px 8px}.keyword button{padding:0;background:transparent;color:var(--danger);font-size:15px}.add-keyword{display:flex;gap:8px}.add-keyword input{flex:1}.manager-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}.close-x{background:transparent;padding:3px 7px;font-size:20px}.close-x:hover{background:rgba(255,255,255,.15)}
 @media(max-width:900px){.order-strip{grid-template-columns:repeat(2,1fr)}.mode-row{grid-template-columns:1fr}.manager-top{grid-template-columns:1fr}.manager-list{display:grid;grid-template-columns:repeat(2,1fr)}}@media(max-width:700px){.page{padding:0}.hero{border-radius:0}.shell{border-radius:0}.order-strip,.match-fields,.match-grid{grid-template-columns:1fr}.content,.setup{padding:16px}.loaded{align-items:flex-start;flex-direction:column}.section-head{align-items:flex-start;flex-direction:column}}@media print{body{background:#fff}.page{max-width:none;padding:0}.hero{border-radius:0}.shell{box-shadow:none}.setup,.actions,details,.routing-card,.match-card,.section-head button{display:none!important}.content{display:block!important;padding:18px}.modal-backdrop{display:none!important}}
-
-body{font-size:16px}.sub,.field-note,.hint,.meta-label,.meta-label,.loaded-meta,.split-table th,.lines-table th,.field label,.mode-btn span{font-size:14px}.page{max-width:1280px}.receipt-editor{padding:22px}.receipt-layout{display:grid;grid-template-columns:3fr 2fr;gap:24px}.edit-meta{display:grid;grid-template-columns:1fr 1fr;gap:12px}.edit-meta label,.tax-field{font-size:14px;font-weight:700;color:var(--navy)}.edit-meta input{margin-top:6px}.edit-table{width:100%;border-collapse:collapse;min-width:420px}.edit-table th{text-align:left;font-size:14px}.edit-table td,.edit-table th{padding:8px 4px;border-bottom:1px solid var(--line)}.edit-table td:nth-child(2){width:135px}.edit-table td:last-child{width:42px}.remove-item{background:#fff2f2;color:var(--danger);padding:8px}.tax-field{display:block;max-width:180px}.source-panel{min-width:0}.source-panel img{width:100%;max-height:600px;object-fit:contain;background:var(--soft)}.source-panel object{width:100%;height:500px;border:1px solid var(--line)}.source-panel details{margin-top:14px}.source-panel textarea{width:100%;resize:vertical;font:14px monospace;padding:12px;border:1px solid var(--line)}.balance{margin:14px 0;padding:12px 14px;border-radius:7px;border:1px solid #ead4a6;background:#fff8ea;font-size:14px;font-weight:700}.balance.good{background:#f1faf6;border-color:#b8daca;color:var(--good)}.confirm-review{display:flex;gap:10px;align-items:flex-start;font-size:14px;margin:14px 0}.confirm-review input{margin-top:3px}button:disabled{opacity:.5;cursor:not-allowed}.choose:focus-within{outline:3px solid #11a2cc;outline-offset:3px}.choose input{display:block;position:absolute;width:1px;height:1px;opacity:0}.review-note{font-size:14px}.desc input{min-width:180px}.content .lines-table{min-width:1080px}[hidden]{display:none!important}@media(max-width:800px){.receipt-layout{grid-template-columns:1fr}.edit-meta,.match-fields,.match-grid,.mode-row{grid-template-columns:1fr}.order-strip{grid-template-columns:1fr 1fr}.receipt-editor,.content,.setup{padding:15px}.source-panel{order:2}.manager-top{grid-template-columns:1fr}.section-head{flex-wrap:wrap}.modal-backdrop{padding:8px}}
 </style>
 </head>
 <body>
 <div class="page">
-  <header class="hero"><h1>Receipt Splitter</h1><p>Read a receipt, review the items, and prepare your Ramp split.</p></header>
+  <header class="hero"><h1>Amazon PDF Splitter</h1><p>Drop in the Amazon PDF, match the Ramp charge when needed, and let the tool route the items.</p></header>
   <div class="shell">
     <section class="setup">
       <div class="upload-card" id="uploadCard">
-        <div class="upload-title">Drop a receipt from any merchant</div>
-        <div class="upload-help">PDFs, photos and screenshots • One receipt at a time</div>
-        <label class="choose" id="dropZone"><input id="pdfInput" type="file" accept="application/pdf,image/jpeg,image/png,image/webp,image/bmp,.pdf,.jpg,.jpeg,.png,.webp,.bmp"><span>Choose Receipt</span></label>
-        <div class="hint">You can also drag and drop a PDF or image here.</div>
-        <div class="hint">English / USD receipts. Review is required before copying or printing.<br>HEIC photos: export as JPG or PNG first.</div><div class="actions" style="justify-content:center"><button type="button" class="ghost" id="manualBtn">Enter receipt manually</button></div><div class="match-fields">
-          <div class="field"><label>Ramp Transaction Amount (optional)</label><input id="rampAmountBefore" type="number" step="0.01" placeholder="169.90"><div class="field-note">Compare with the Ramp charge; Amazon shipment matching is supported.</div></div>
-          <div class="field"><label>Ramp Transaction Date (optional)</label><input id="rampDateBefore" type="date"><div class="field-note">Used when matching Amazon charges and shipments.</div></div>
+        <div class="upload-title">Upload Amazon Receipt or Order Details PDF</div>
+        <div class="upload-help">No bucket selection required before upload.</div>
+        <label class="choose" id="dropZone"><input id="pdfInput" type="file" accept="application/pdf,.pdf"><span>Choose PDF</span></label>
+        <div class="hint">You can also drag and drop the PDF here.</div>
+        <div class="match-fields">
+          <div class="field"><label>Ramp Transaction Amount (optional)</label><input id="rampAmountBefore" type="number" min="0" step="0.01" placeholder="169.90"><div class="field-note">Use this when the Amazon order total is larger than the Ramp charge.</div></div>
+          <div class="field"><label>Ramp Transaction Date (optional)</label><input id="rampDateBefore" type="date"><div class="field-note">Helps when the same amount appears more than once.</div></div>
         </div>
       </div>
-      <div class="loaded" id="loadedBar"><div><div class="loaded-name" id="loadedName"></div><div class="loaded-meta" id="loadedMeta"></div></div><div class="loaded-actions"><button class="secondary" id="changeBtn">Change Receipt</button></div></div>
-      <div class="status" id="status" role="status" aria-live="polite"></div>
+      <div class="loaded" id="loadedBar"><div><div class="loaded-name" id="loadedName"></div><div class="loaded-meta" id="loadedMeta"></div></div><div class="loaded-actions"><button class="secondary" id="changeBtn">Change PDF</button></div></div>
+      <div class="status" id="status"></div>
     </section>
 
-
-<section id="receiptEditor" class="receipt-editor" hidden>
- <div class="section-head"><h2 class="section-title">Review your receipt</h2><button class="ghost" id="editorNew">New Receipt</button></div>
- <p id="readNote" class="review-note"></p>
- <div class="receipt-layout"><div>
-  <div class="edit-meta">
-   <label>Merchant<input id="editMerchant" type="text" autocomplete="off"></label>
-   <label>Receipt / order number<input id="editReference" type="text"></label>
-   <label>Receipt date<input id="editDate" type="text" placeholder="MM/DD/YYYY"></label>
-   <label>Receipt total<input id="editTotal" type="number" step="0.01" placeholder="Required"></label>
-  </div>
-  <p class="sub">Enter each row’s extended amount (quantity × price), before tax. Use negative amounts for discounts and credits. Add shipping or tips as separate rows.</p>
-  <div class="lines-wrap"><table class="edit-table"><thead><tr><th>Item description</th><th>Amount before tax</th><th></th></tr></thead><tbody id="editItems"></tbody></table></div>
-  <div class="actions"><button class="ghost" id="addItem">+ Add item</button></div>
-  <label class="tax-field">Receipt tax<input id="editTax" type="number" step="0.01" value="0"></label>
-  <p class="sub">Tax is distributed proportionally across the item amounts. Check each item’s tax in Review Items after creating the split; you can edit it there.</p>
-  <div id="editBalance" class="balance" role="status"></div>
-  <div class="actions"><button id="useReceipt">Use Reviewed Receipt</button></div>
- </div><aside class="source-panel"><div class="section-head"><strong>Original receipt</strong><a id="openOriginal" target="_blank" rel="noopener" hidden>Open original</a></div><div id="sourcePreview"></div>
- <details><summary>Extracted text / paste receipt text</summary><textarea id="rawText" aria-label="Receipt text" rows="14" placeholder="Paste receipt text here if needed"></textarea><button class="secondary" id="parseText">Read Text Again</button></details></aside></div>
-</section>
     <main class="content" id="content">
-      <div class="section-head"><h2 class="section-title" id="merchantHeading">Receipt</h2><button class="ghost" id="editReceiptBtn">Edit Receipt</button></div><div class="order-strip">
+      <div class="order-strip">
         <div class="meta"><div class="meta-label">Order Number</div><div class="meta-value" id="orderNumber">—</div></div>
         <div class="meta"><div class="meta-label">Order Date</div><div class="meta-value" id="orderDate">—</div></div>
-        <div class="meta"><div class="meta-label">Receipt Total</div><div class="meta-value" id="orderTotal">$0.00</div></div>
+        <div class="meta"><div class="meta-label">Amazon Order Total</div><div class="meta-value" id="orderTotal">$0.00</div></div>
         <div class="meta"><div class="meta-label">Ramp Split Total</div><div class="meta-value" id="transactionTotal">$0.00</div></div>
       </div>
 
       <div class="match-card" id="matchCard">
         <div class="match-title">🔎 Ramp Transaction Match</div>
         <div class="match-grid">
-          <div class="field"><label>Ramp Transaction Amount</label><input id="rampAmount" type="number" step="0.01" placeholder="Optional"></div>
+          <div class="field"><label>Ramp Transaction Amount</label><input id="rampAmount" type="number" min="0" step="0.01" placeholder="Optional"></div>
           <div class="field"><label>Transaction Date</label><input id="rampDate" type="date"></div>
           <button id="matchBtn">Apply Match</button>
         </div>
-        <div class="match-result" id="matchResult">No Ramp amount entered. The full receipt is included.</div>
+        <div class="match-result" id="matchResult">No Ramp amount entered. The full Amazon order is included.</div>
       </div>
 
       <div class="routing-card">
@@ -82,8 +59,8 @@ body{font-size:16px}.sub,.field-note,.hint,.meta-label,.meta-label,.loaded-meta,
 
       <div class="section-head"><h2 class="section-title">Ramp Split</h2><button class="ghost" id="managerBtn">⚙ Manage Keywords</button></div>
       <div class="summary-wrap" id="summaryWrap"></div>
-      <div id="finalBalance" class="balance" role="status"></div><label class="confirm-review"><input type="checkbox" id="confirmReview"> I checked the items, coding, tax and total against the original receipt.</label><div class="actions"><button id="copyBtn">Copy Ramp Split</button><button id="printBtn">Print PDF</button><button class="secondary" id="newBtn">New Receipt</button></div>
-      <details id="reviewDetails" open><summary>Review Items</summary><div class="lines-wrap"><table class="lines-table"><thead><tr><th>Description</th><th style="width:165px">Bucket</th><th style="width:300px">Coding</th><th style="width:180px">Memo</th><th class="amount" style="width:115px">Tax</th><th class="amount" style="width:115px">Amount</th></tr></thead><tbody id="linesBody"></tbody></table></div></details>
+      <div class="actions"><button id="copyBtn">Copy Ramp Split</button><button id="printBtn">Print PDF</button><button class="secondary" id="newBtn">Upload New PDF</button></div>
+      <details id="reviewDetails"><summary>Review Items</summary><div class="lines-wrap"><table class="lines-table"><thead><tr><th>Description</th><th style="width:165px">Bucket</th><th style="width:300px">Coding</th><th style="width:180px">Memo</th><th class="amount" style="width:115px">Amount</th></tr></thead><tbody id="linesBody"></tbody></table></div></details>
     </main>
   </div>
 </div>
@@ -103,78 +80,10 @@ body{font-size:16px}.sub,.field-note,.hint,.meta-label,.meta-label,.loaded-meta,
 </div>
 
 <script type="module">
-// Conservative USD receipt suggestions. All results require human review.
-const toCents = n => Math.round(Number(n) * 100);
-function readAmount(value) {
-  const s = String(value).trim();
-  const n = Number(s.replace(/[$,()\s−-]/g, ''));
-  return /[-−(]/.test(s) ? -n : n;
-}
-function parseReceipt(text) {
- const lines=text.split(/\r?\n/).map(s=>s.replace(/^[|{}§]\s*/,'').replace(/^\s*[a-z|§]\s{3,}/i,'').replace(/\s{3,}[a-z0-9§&|~:]{1,2}\s*$/i,'').trim()).filter(Boolean);
- const items=[];let tax=0,total=null,subtotal=null,reference='',date='',current=null,summary=false;
- const warnings=['Suggested items only. Compare descriptions, amounts, discounts and tax with the original receipt.'];
- const amountAtEnd=/(\(?\$?\s*[-−]?\s*\d[\d,]*\.\d{2}\)?-?)\s*(?:[^\d\s]{0,3})?\s*$/;
- const summaryLabel=/^(?:(?:sales|state|county|local)\s+)?tax\b|^(?:sub\s*total|grand\s+total|order\s+total|total\s+due|amount\s+due|balance\s+due|total)\b/i;
- const metadata=/^(?:visa|master\s*card|amex|american express|discover|cash|change|tender|debit|credit card|payment|paid|balance|you saved|total savings|savings|auth|approval|account|card|suggested tip|tip suggestion|USD\s*\$?|[x*]{3,}|chip read|aid\b|p\.?o\.?[.#/ ]|return policy|policy|sale self|sold by|shipping address|billing address)/i;
- for(let i=0;i<lines.length;i++){
-  let line=lines[i];const d=line.match(/\b(\d{1,2}[\/-]\d{1,2}[\/-]\d{2,4}|\d{4}-\d{2}-\d{2})\b/);if(!date&&d)date=d[1];
-  const ref=line.match(/(?:receipt|invoice|order|transaction)\s*(?:number|no\.?|#|:)\s*([A-Z0-9-]+)/i);if(!reference&&ref)reference=ref[1];
-  if(summaryLabel.test(line)&&!amountAtEnd.test(line)&&i+1<lines.length&&/^\$?\s*[-−]?\d[\d,]*\.\d{2}\s*$/.test(lines[i+1]))line+=' '+lines[++i];
-  const m=line.match(amountAtEnd);
-  if(!m){
-   if(summaryLabel.test(line)||metadata.test(line)){current=null;if(summaryLabel.test(line))summary=true;continue;}
-   // Long product names frequently wrap below a SKU/price row.
-   if(current&&!summary&&!d&&/[a-z]{3}/i.test(line)&&!ref&&!/https?:|www\.|@|\b(?:phone|tel|qty|quantity|unit price|store|terminal|items sold)\b/i.test(line)){
-    const detail=line.replace(/\s*<[A-Z]>\s*/g,' ').replace(/\s+/g,' ').trim();
-    if(current.sku&&!current.expanded){current.description=detail;current.expanded=true;}else current.description+=' '+detail;
-   }
-   continue;
-  }
-  const value=readAmount(m[1]),label=line.slice(0,m.index).replace(/[:\s]+$/,'').trim();
-  if(/^(?:(?:sales|state|county|local)\s+)?tax\b/i.test(label)){tax+=value;summary=true;current=null;continue;}
-  if(/^(?:sub\s*total|total before tax|net amount)\b/i.test(label)){subtotal=value;summary=true;current=null;continue;}
-  if(/^(?:grand\s+total|order\s+total|total\s+due|amount\s+due|balance\s+due|total)\b/i.test(label)&&!/before|saving|discount|item|tax/i.test(label.replace(/^total/i,''))){total=value;summary=true;current=null;continue;}
-  if(metadata.test(label)){current=null;continue;}
-  if(/^(?:shipping|delivery|handling|service (?:fee|charge)|tip|gratuity|discount|coupon|promotion)\b/i.test(label)){items.push({description:label,amount:/discount|coupon|promotion/i.test(label)?-Math.abs(value):value});current=null;continue;}
-  if(summary||!/[a-z]/i.test(label)||/\b(?:\d+\s*@|\d+\s+x)\s*\$?$/i.test(label))continue;
-  const sku=(label.match(/^\W*(\d{8,16})\s+/)||[])[1]||'';
-  current={description:label.replace(/^\W*\d{8,16}\s+/,'').replace(/\s*<[A-Z]>\s*/g,' ').replace(/\s+/g,' ').trim(),amount:value,sku};items.push(current);
- }
- const isHomeDepot=/home\s*depot|how\s+doers|get\s+more\s+done/i.test(text);
- const merchant=isHomeDepot?'The Home Depot':lines.find(s=>/[a-z]{3}/i.test(s)&&!/^(receipt|invoice|order|welcome|thank|https?:)/i.test(s))||'';
- if(total===null)warnings.push('Receipt total was not found. Enter the total from the original.');
- if(!items.length)warnings.push('No item rows could be read. Try a clearer image or enter the items.');
- return {merchant,reference,date,tax:Math.round(tax*100)/100,total,subtotal,items,warnings};
-}
-function receiptReadScore(data){
- const parsed=parseReceipt(data.text),balance=receiptBalance(parsed.items,parsed.tax,parsed.total),itemSum=parsed.items.reduce((s,x)=>s+toCents(x.amount),0);
- const balanced=parsed.total!==null&&parsed.items.length>0&&balance.difference===0;
- const subtotalOK=parsed.subtotal===null||itemSum===toCents(parsed.subtotal);
- return {parsed,balanced:balanced&&subtotalOK,score:(balanced?1000:0)+(subtotalOK?50:0)+(parsed.total!==null?100:0)+Math.min(parsed.items.length,20)*5+(data.confidence||0)};
-}
-
-// Largest remainder allocation, with exact cents and support for credits.
-function allocateReceiptTax(items, tax) {
-  const target = toCents(tax), weights = items.map(x=>toCents(x.amount));
-  const base = weights.reduce((s,n)=>s+n,0);
-  if (!base) return items.map((x,i)=>({...x,tax:i===0?target/100:0,lineTotal:(toCents(x.amount)+(i===0?target:0))/100}));
-  const parts = weights.map((w,i)=>{const n=target*w/base;return {i,n:Math.floor(n),r:n-Math.floor(n)};});
-  let left = target-parts.reduce((s,p)=>s+p.n,0);
-  for (const p of [...parts].sort((a,b)=>b.r-a.r||a.i-b.i)) if(left-->0) p.n++;
-  return items.map((x,i)=>{const t=parts[i].n;return {...x,tax:t/100,lineTotal:(toCents(x.amount)+t)/100};});
-}
-
-function receiptBalance(items, tax, total) {
-  const sum = items.reduce((s,x)=>s+toCents(x.amount),0) + toCents(tax);
-  return {sum:sum/100, difference:total === null ? null : (toCents(total)-sum)/100};
-}
-
-let pdfjsLib;
-async function loadPdf(){if(!pdfjsLib){pdfjsLib=await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs');pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';}return pdfjsLib;}
+import * as pdfjsLib from 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs';
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
 
 const $=id=>document.getElementById(id);
-const validMoney=n=>Number.isFinite(n)&&Math.abs(n*100-Math.round(n*100))<0.000001;
 const money=n=>`$${Number(n||0).toFixed(2)}`;
 const normalize=s=>(s||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').replace(/\s+/g,' ').trim();
 const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
@@ -237,7 +146,7 @@ const PROFILE_OPTIONS={
  ],
  hsk:[
   {code:'7700 - 310 - Housekeeping Operations',memo:'Housekeeping Tool',keywords:['tub hose','faucet sprayer','rinseroo','hair remover tool','drain hair remover','sink hair remover','moth trap','moth traps','extension cord','knee pad','knee pads','cleaning caddy','utility bucket','mop handle','squeegee','dustpan','duster','scrub brush','cleaning brush']},
-  {code:'7704 - 310 - Supplies - Cleaning',memo:'Cleaning Supplies',keywords:['windex','cleaner','disinfectant','magic eraser','melamine sponge','cleaning pad','clorox clean up','bleach spray','glass cleaner','bathroom cleaner','all purpose cleaner','trash bag','garbage bag','mop head','sponge']},
+  {code:'7704 - 310 - Supplies - Cleaning',memo:'Cleaning Supplies',keywords:['cleaner','disinfectant','magic eraser','melamine sponge','cleaning pad','clorox clean up','bleach spray','glass cleaner','bathroom cleaner','all purpose cleaner','trash bag','garbage bag','mop head','sponge']},
   {code:'7705 - 311 - Supplies - Laundry',memo:'Laundry Supplies',keywords:['laundry','stain remover','whitener','detergent','fabric softener','dryer sheet','oxiclean']}
  ]
 };
@@ -283,9 +192,9 @@ function suggestMemo(description,p,code,defaultMemo='',matchedKeyword=''){
 }
 function classifyInProfile(description,p){const text=normalize(description),candidates=[];for(const rule of profileRules(p)){for(const keyword of rule.keywords||[]){const k=normalize(keyword);if(k&&text.includes(k))candidates.push({rule,keyword,score:k.length})}}if(!candidates.length)return{profile:p,coding:'',memo:''};candidates.sort((a,b)=>b.score-a.score);const best=candidates[0],rule=best.rule;return{profile:p,coding:rule.code,memo:suggestMemo(description,p,rule.code,rule.memo,best.keyword),score:best.score}}
 function classifyAny(description){const matches=[];for(const p of Object.keys(PROFILE_META)){const c=classifyInProfile(description,p);if(c.coding)matches.push(c)}if(!matches.length)return{profile:'',coding:'',memo:''};matches.sort((a,b)=>(b.score||0)-(a.score||0));return matches[0]}
-function applyRouting(){invalidateReview();for(const line of allLines){let c;if(mode==='single')c=classifyInProfile(line.description,singleProfile);else c=classifyAny(line.description);line.profile=c.profile|| (mode==='single'?singleProfile:'');line.coding=c.coding;line.memo=c.memo}renderLines();renderSummary();updateStatusAfterRouting()}
+function applyRouting(){for(const line of allLines){let c;if(mode==='single')c=classifyInProfile(line.description,singleProfile);else c=classifyAny(line.description);line.profile=c.profile|| (mode==='single'?singleProfile:'');line.coding=c.coding;line.memo=c.memo}renderLines();renderSummary();updateStatusAfterRouting()}
 
-function bucketOptions(selected='',disabled=false){return '<option value="">Choose bucket</option>'+Object.entries(PROFILE_META).map(([k,v])=>`<option value="${k}" ${selected===k?'selected':''}>${esc(v.short)}</option>`).join('')}
+function bucketOptions(selected='',disabled=false){return Object.entries(PROFILE_META).map(([k,v])=>`<option value="${k}" ${selected===k?'selected':''}>${esc(v.short)}</option>`).join('')}
 function codingOptions(p,selected=''){let html='<option value="">Review Required</option>';for(const opt of profileOptions(p))html+=`<option value="${esc(opt.code)}" ${selected===opt.code?'selected':''}>${esc(opt.code)}</option>`;return html}
 function populateBucketSelects(){const html=Object.entries(PROFILE_META).map(([k,v])=>`<option value="${k}">${esc(v.name)}</option>`).join('');$('singleBucket').innerHTML=html;$('singleBucket').value=singleProfile}
 
@@ -332,12 +241,11 @@ function parseAmazon(lines){
 function subsetForAmount(shipments,target){const t=cents(target),valid=shipments.filter(s=>s.items.length&&cents(s.total)>0);let best=null;function walk(i,sum,picked){if(sum===t){best=[...picked];return true}if(i>=valid.length||sum>t)return false;if(walk(i+1,sum+cents(valid[i].total),[...picked,valid[i]]))return true;return walk(i+1,sum,picked)}walk(0,0,[]);return best}
 function matchTransaction(amount,date=''){
  if(!parsedReceipt)return;
- if(!parsedReceipt.amazon){checkFinal();return;}
- invalidateReview();const target=Number(amount||0);let selected=parsedReceipt.items, message='No Ramp amount entered. The full receipt is included.',kind='';
+ const target=Number(amount||0);let selected=parsedReceipt.items, message='No Ramp amount entered. The full Amazon order is included.',kind='';
  if(target>0){const exactTx=parsedReceipt.transactions.filter(t=>Math.abs(t.amount-target)<.011&&(!date||t.date===date));let tx=exactTx[0];let candidateShipments=[];
   if(tx)candidateShipments=parsedReceipt.shipments.filter(s=>s.date===tx.date&&s.items.length);
   if(candidateShipments.length&&Math.abs(candidateShipments.reduce((s,x)=>s+x.total,0)-target)<.011){selected=candidateShipments.flatMap(s=>s.items);message=`Exact Amazon card charge found: ${money(target)} on ${tx.dateText}. ${candidateShipments.length} shipment${candidateShipments.length===1?'':'s'} selected automatically.`;kind='good'}
-  else {const subset=subsetForAmount(parsedReceipt.shipments,target);if(subset){selected=subset.flatMap(s=>s.items);const dates=[...new Set(subset.map(s=>s.dateText))].join(', ');message=`Shipment total matched exactly to ${money(target)}${dates?` (${dates})`:''}. ${subset.length} shipment${subset.length===1?'':'s'} selected.`;kind='good'}else if(Math.abs(parsedReceipt.orderTotal-target)<.011){selected=parsedReceipt.items;message=`Ramp amount matches the full receipt total: ${money(target)}.`;kind='good'}else{selected=parsedReceipt.items;message=`I could not isolate an exact ${money(target)} shipment match. The full order remains selected for review.`;kind='warn'}}
+  else {const subset=subsetForAmount(parsedReceipt.shipments,target);if(subset){selected=subset.flatMap(s=>s.items);const dates=[...new Set(subset.map(s=>s.dateText))].join(', ');message=`Shipment total matched exactly to ${money(target)}${dates?` (${dates})`:''}. ${subset.length} shipment${subset.length===1?'':'s'} selected.`;kind='good'}else if(Math.abs(parsedReceipt.orderTotal-target)<.011){selected=parsedReceipt.items;message=`Ramp amount matches the full Amazon order total: ${money(target)}.`;kind='good'}else{selected=parsedReceipt.items;message=`I could not isolate an exact ${money(target)} shipment match. The full order remains selected for review.`;kind='warn'}}
  }
  allLines=selected.map(x=>({...x}));applyRouting();$('matchResult').innerHTML=`<strong>${esc(message)}</strong><br>${allLines.length} item line${allLines.length===1?'':'s'} included • ${money(allLines.reduce((s,x)=>s+x.lineTotal,0))}`;$('matchCard').className=`match-card${kind?' '+kind:''}`;$('transactionTotal').textContent=money(allLines.reduce((s,x)=>s+x.lineTotal,0));updateLoadedMeta();
 }
@@ -346,40 +254,31 @@ function grouped(){const map=new Map();for(const line of allLines){const key=lin
 function joinMemos(memos){const values=[...memos.keys()].filter(v=>v&&v!=='—');return values.length?values.join(', '):'Review Required'}
 function hskParts(label){const m=(label||'').match(/^(\d{4})\s*-\s*(\d{3})\s*-\s*(.+)$/);return m?{gl:m[1],dept:m[2],description:m[3]}:{gl:label||'Review Required',dept:'—',description:''}}
 function codingDisplay(g){if(g.key==='__review')return{coding:'Review Required',dept:'—'};if(g.profile==='hsk'){const p=hskParts(g.label);return{coding:`${p.gl} – ${p.description}`,dept:p.dept}}return{coding:g.label,dept:'—'}}
-function renderSummary(){checkFinal();const wrap=$('summaryWrap'),groups=grouped();if(!groups.length){$('transactionTotal').textContent=money(0);wrap.innerHTML='<div class="sub" style="padding:20px">No purchase lines are selected.</div>';return}const rows=groups.map(g=>{const d=codingDisplay(g),review=g.key==='__review';return `<tr class="${review?'review-row':''}"><td>${esc(g.profile?PROFILE_META[g.profile].short:'Review')}</td><td class="coding">${esc(d.coding)}</td><td class="dept">${esc(d.dept)}</td><td class="memo">${esc(joinMemos(g.memos))}</td><td class="amount">${money(g.total)}</td></tr>`}).join('');const total=groups.reduce((s,g)=>s+g.total,0);wrap.innerHTML=`<table class="split-table"><thead><tr><th>Bucket</th><th>GL / Ramp Item</th><th class="dept">Dept</th><th>Memo</th><th class="amount">Amount</th></tr></thead><tbody>${rows}</tbody><tfoot><tr><td class="total-label" colspan="4">Transaction Total</td><td class="amount">${money(total)}</td></tr></tfoot></table>`;$('transactionTotal').textContent=money(total)}
-function renderLines(){
- const body=$('linesBody');body.innerHTML='';
- allLines.forEach((line,i)=>{const tr=document.createElement('tr');if(!line.coding)tr.className='uncoded';tr.innerHTML=`<td class="desc"><input aria-label="Item description ${i+1}" type="text" data-i="${i}" data-field="description" value="${esc(line.description)}"><div class="sub">Item ${money(line.amount)}${line.shipmentDateText?` • Shipped ${esc(line.shipmentDateText)}`:''}</div></td><td><select aria-label="Bucket ${i+1}" data-i="${i}" data-field="profile" ${mode==='single'?'disabled':''}>${bucketOptions(line.profile)}</select></td><td><select aria-label="Coding ${i+1}" data-i="${i}" data-field="coding">${codingOptions(line.profile,line.coding)}</select></td><td><input aria-label="Memo ${i+1}" type="text" data-i="${i}" data-field="memo" value="${esc(line.memo)}"></td><td><input aria-label="Tax ${i+1}" type="number" step="0.01" data-i="${i}" data-field="tax" value="${line.tax}"></td><td class="amount">${money(line.lineTotal)}</td>`;body.appendChild(tr)});
- body.querySelectorAll('[data-field]').forEach(el=>el.addEventListener('change',e=>{invalidateReview();const line=allLines[+e.target.dataset.i],field=e.target.dataset.field;
- if(field==='profile'){line.profile=e.target.value;const c=classifyInProfile(line.description,line.profile);line.coding=c.coding;line.memo=c.memo}
- else if(field==='coding'){line.coding=e.target.value;const opt=optionByCode(line.coding,line.profile);line.memo=opt?suggestMemo(line.description,line.profile,opt.code,opt.memo,(opt.keywords||[]).find(k=>normalize(line.description).includes(normalize(k)))||''):''}
- else if(field==='tax'){line.tax=e.target.value===''?NaN:Number(e.target.value);line.lineTotal=Number.isFinite(line.tax)?(cents(line.amount)+cents(line.tax))/100:NaN}
- else{line[field]=e.target.value;if(field==='description'){line.coding='';line.memo=''}}
- renderLines();renderSummary();}));renderSummary();
-}
-
-function updateStatusAfterRouting(){checkFinal();}
+function renderSummary(){const wrap=$('summaryWrap'),groups=grouped();if(!groups.length){wrap.innerHTML='<div class="sub" style="padding:20px">No purchase lines are selected.</div>';return}const rows=groups.map(g=>{const d=codingDisplay(g),review=g.key==='__review';return `<tr class="${review?'review-row':''}"><td>${esc(g.profile?PROFILE_META[g.profile].short:'Review')}</td><td class="coding">${esc(d.coding)}</td><td class="dept">${esc(d.dept)}</td><td class="memo">${esc(joinMemos(g.memos))}</td><td class="amount">${money(g.total)}</td></tr>`}).join('');const total=groups.reduce((s,g)=>s+g.total,0);wrap.innerHTML=`<table class="split-table"><thead><tr><th>Bucket</th><th>GL / Ramp Item</th><th class="dept">Dept</th><th>Memo</th><th class="amount">Amount</th></tr></thead><tbody>${rows}</tbody><tfoot><tr><td class="total-label" colspan="4">Transaction Total</td><td class="amount">${money(total)}</td></tr></tfoot></table>`;$('transactionTotal').textContent=money(total)}
+function renderLines(){const body=$('linesBody');body.innerHTML='';allLines.forEach((line,i)=>{const tr=document.createElement('tr');if(!line.coding)tr.className='uncoded';const bucketDisabled=mode==='single'?'disabled':'';tr.innerHTML=`<td class="desc">${esc(line.description)}<div class="sub">${line.shipmentDateText?`Shipped ${esc(line.shipmentDateText)} • `:''}Item ${money(line.amount)} + Tax ${money(line.tax)}</div>${line.coding?'':'<div class="review-note">Review Required</div>'}</td><td><select data-i="${i}" data-field="profile" ${bucketDisabled}>${bucketOptions(line.profile)}</select></td><td><select data-i="${i}" data-field="coding">${codingOptions(line.profile,line.coding)}</select></td><td><input type="text" data-i="${i}" data-field="memo" value="${esc(line.memo)}"></td><td class="amount"><strong>${money(line.lineTotal)}</strong></td>`;body.appendChild(tr)});
+ body.querySelectorAll('[data-field]').forEach(el=>el.addEventListener(el.dataset.field==='memo'?'input':'change',e=>{const i=+e.target.dataset.i,field=e.target.dataset.field,line=allLines[i];if(field==='profile'){line.profile=e.target.value;const c=classifyInProfile(line.description,line.profile);line.coding=c.coding;line.memo=c.memo;renderLines()}else if(field==='coding'){line.coding=e.target.value;const opt=optionByCode(line.coding,line.profile);line.memo=opt?suggestMemo(line.description,line.profile,opt.code,opt.memo,(opt.keywords||[]).find(k=>normalize(line.description).includes(normalize(k)))||''):'';renderLines()}else{line.memo=e.target.value;renderSummary()} }));renderSummary()}
+function updateStatusAfterRouting(){const review=allLines.filter(x=>!x.coding).length;setStatus(review?`${allLines.length} matched line${allLines.length===1?'':'s'}. ${review} need review.`:`${allLines.length} matched line${allLines.length===1?'':'s'}. Ramp split is ready.`)}
 function setStatus(message,error=false){const s=$('status');s.textContent=message;s.className=`status show${error?' error':''}`}
-function updateLoadedMeta(){if(!parsedReceipt)return;$('loadedMeta').textContent=`Receipt ${parsedReceipt.order} • ${allLines.length} selected line${allLines.length===1?'':'s'} • ${money(allLines.reduce((s,x)=>s+x.lineTotal,0))}`}
+function updateLoadedMeta(){if(!currentFile||!parsedReceipt)return;$('loadedMeta').textContent=`Order ${parsedReceipt.order} • ${allLines.length} selected line${allLines.length===1?'':'s'} • ${money(allLines.reduce((s,x)=>s+x.lineTotal,0))}`}
 
-
-function reset(){clearReceipt();mode='auto';singleProfile='gsc';allLines=[];purchaseLines=[];parsedReceipt=null;currentFile=null;$('pdfInput').value='';$('rampAmountBefore').value='';$('rampDateBefore').value='';$('content').style.display='none';$('uploadCard').style.display='block';$('loadedBar').style.display='none';$('status').className='status';document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode==='auto'));$('singleBucketWrap').style.display='none';window.scrollTo({top:0,behavior:'smooth'})}
+async function handleFile(file){if(!file||!/pdf/i.test(file.type||file.name))return setStatus('Please select a PDF file.',true);currentFile=file;try{setStatus('Reading Amazon PDF…');const pdf=await pdfjsLib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise,lines=[];for(let p=1;p<=pdf.numPages;p++)lines.push(...await pageLines(await pdf.getPage(p)));parsedReceipt=parseAmazon(lines);$('orderNumber').textContent=parsedReceipt.order;$('orderDate').textContent=parsedReceipt.date;$('orderTotal').textContent=money(parsedReceipt.orderTotal);$('content').style.display='block';$('uploadCard').style.display='none';$('loadedBar').style.display='flex';$('loadedName').textContent=file.name;const amount=$('rampAmountBefore').value;$('rampAmount').value=amount;$('rampDate').value=$('rampDateBefore').value;matchTransaction(amount,$('rampDate').value);window.scrollTo({top:0,behavior:'smooth'})}catch(error){console.error(error);$('content').style.display='none';setStatus(`I couldn't read this PDF: ${error.message}`,true)}}
+function reset(){mode='auto';singleProfile='gsc';allLines=[];purchaseLines=[];parsedReceipt=null;currentFile=null;$('pdfInput').value='';$('rampAmountBefore').value='';$('rampDateBefore').value='';$('content').style.display='none';$('uploadCard').style.display='block';$('loadedBar').style.display='none';$('status').className='status';document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode==='auto'));$('singleBucketWrap').style.display='none';window.scrollTo({top:0,behavior:'smooth'})}
 function setMode(next){mode=next;document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));$('singleBucketWrap').style.display=mode==='single'?'block':'none';applyRouting()}
 
 function openManager(){populateManagerProfiles();$('managerProfile').value=singleProfile;managerSelectedCode=profileOptions($('managerProfile').value)[0].code;renderManager();$('managerModal').classList.add('show')}
-function closeManager(){$('managerModal').classList.remove('show')}
+function closeManager(){$('managerModal').classList.remove('show');if(allLines.length)applyRouting()}
 function populateManagerProfiles(){$('managerProfile').innerHTML=Object.entries(PROFILE_META).map(([k,v])=>`<option value="${k}">${esc(v.name)}</option>`).join('')}
 function renderManager(){const p=$('managerProfile').value,opts=profileOptions(p);if(!opts.some(x=>x.code===managerSelectedCode))managerSelectedCode=opts[0].code;const list=$('managerCategoryList');list.innerHTML=opts.map(opt=>`<button class="manager-cat ${opt.code===managerSelectedCode?'active':''}" data-code="${esc(opt.code)}">${esc(opt.code)}</button>`).join('');list.querySelectorAll('[data-code]').forEach(b=>b.onclick=()=>{managerSelectedCode=b.dataset.code;renderManager()});const option=opts.find(x=>x.code===managerSelectedCode),rule=profileRules(p).find(x=>x.code===managerSelectedCode);$('managerEditor').innerHTML=`<h3>${esc(option.code)}</h3><div class="rule-code">Default memo: ${esc(option.memo)}</div><div class="keyword-list">${(rule.keywords||[]).map((k,i)=>`<span class="keyword">${esc(k)}<button data-remove="${i}" title="Remove">×</button></span>`).join('')||'<span class="sub">No keywords yet.</span>'}</div><div class="add-keyword"><input id="newKeyword" type="text" placeholder="Add a product word or phrase"><button id="addKeyword">Add Keyword</button></div>`;$('managerEditor').querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{rule.keywords.splice(+b.dataset.remove,1);saveRules();renderManager()});$('addKeyword').onclick=()=>{const input=$('newKeyword'),value=input.value.trim();if(value&&!rule.keywords.some(k=>normalize(k)===normalize(value))){rule.keywords.push(value);saveRules();renderManager()}};$('newKeyword').addEventListener('keydown',e=>{if(e.key==='Enter')$('addKeyword').click()})}
 
 populateBucketSelects();
-$('pdfInput').addEventListener('change',e=>handleFiles(e.target.files));
-const drop=$('dropZone');for(const ev of ['dragenter','dragover'])drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('drag')});for(const ev of ['dragleave','drop'])drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('drag')});drop.addEventListener('drop',e=>handleFiles(e.dataTransfer.files));
+$('pdfInput').addEventListener('change',e=>handleFile(e.target.files[0]));
+const drop=$('dropZone');for(const ev of ['dragenter','dragover'])drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('drag')});for(const ev of ['dragleave','drop'])drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('drag')});drop.addEventListener('drop',e=>handleFile(e.dataTransfer.files[0]));
 document.querySelectorAll('.mode-btn').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
 $('singleBucket').onchange=e=>{singleProfile=e.target.value;applyRouting()};
 $('matchBtn').onclick=()=>matchTransaction($('rampAmount').value,$('rampDate').value);
-function printRampSplit(){if(!canExport())return;
+function printRampSplit(){
  const summary=$('summaryWrap').innerHTML;
- if(!summary||!allLines.length){setStatus('Read and review a receipt before printing.','error');return;}
+ if(!summary||!allLines.length){setStatus('Upload and process an Amazon PDF before printing.','error');return;}
  const order=$('orderNumber').textContent||'—';
  const date=$('orderDate').textContent||'—';
  const orderTotal=$('orderTotal').textContent||'$0.00';
@@ -390,189 +289,16 @@ function printRampSplit(){if(!canExport())return;
  document.body.appendChild(frame);
  const doc=frame.contentDocument||frame.contentWindow.document;
  doc.open();
- doc.write(`<!doctype html><html><head><meta charset="utf-8"><title>Receipt Ramp Split</title><style>
+ doc.write(`<!doctype html><html><head><meta charset="utf-8"><title>Amazon Ramp Split</title><style>
  @page{size:auto;margin:.45in}*{box-sizing:border-box}body{font-family:Arial,sans-serif;color:#17242b;margin:0;font-size:12px}h1{margin:0 0 4px;color:#12384a;font-size:20px}.subhead{color:#657780;margin-bottom:14px}.meta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}.meta{border:1px solid #d7e1e6;border-radius:6px;padding:8px}.label{text-transform:uppercase;font-size:9px;color:#657780;letter-spacing:.3px}.value{font-weight:700;margin-top:3px}.summary-wrap{border:1px solid #d7e1e6;border-radius:6px;overflow:hidden}.split-table{width:100%;border-collapse:collapse}.split-table th{padding:7px 8px;background:#edf3f5;color:#12384a;text-align:left;font-size:9px;text-transform:uppercase;border-bottom:1px solid #d7e1e6}.split-table td{padding:8px;border-bottom:1px solid #d7e1e6;vertical-align:top}.split-table .coding{font-weight:700;color:#12384a}.split-table .dept{text-align:center;width:65px}.split-table .amount{text-align:right;width:90px;white-space:nowrap;font-weight:700}.split-table tfoot td{background:#12384a;color:#fff;font-weight:700;border:0}.split-table tfoot .total-label{text-align:right}.review-row{background:#fff8ea}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
- </style></head><body><h1>Receipt Ramp Split</h1><div class="subhead">${esc(parsedReceipt.merchant)} — reviewed receipt</div><div class="meta-grid"><div class="meta"><div class="label">Order Number</div><div class="value">${esc(order)}</div></div><div class="meta"><div class="label">Order Date</div><div class="value">${esc(date)}</div></div><div class="meta"><div class="label">Receipt Total</div><div class="value">${esc(orderTotal)}</div></div><div class="meta"><div class="label">Ramp Split Total</div><div class="value">${esc(splitTotal)}</div></div></div><div class="summary-wrap">${summary}</div></body></html>`);
+ </style></head><body><h1>Amazon Ramp Split</h1><div class="subhead">Prepared from Amazon receipt/order details</div><div class="meta-grid"><div class="meta"><div class="label">Order Number</div><div class="value">${esc(order)}</div></div><div class="meta"><div class="label">Order Date</div><div class="value">${esc(date)}</div></div><div class="meta"><div class="label">Amazon Order Total</div><div class="value">${esc(orderTotal)}</div></div><div class="meta"><div class="label">Ramp Split Total</div><div class="value">${esc(splitTotal)}</div></div></div><div class="summary-wrap">${summary}</div></body></html>`);
  doc.close();
  const doPrint=()=>{try{frame.contentWindow.focus();frame.contentWindow.print()}finally{setTimeout(()=>frame.remove(),1500)}};
  if(doc.readyState==='complete')setTimeout(doPrint,150);else frame.onload=()=>setTimeout(doPrint,150);
 }
 $('newBtn').onclick=reset;$('changeBtn').onclick=()=>{reset();setTimeout(()=>$('pdfInput').click(),100)};$('printBtn').onclick=printRampSplit;
-$('copyBtn').onclick=async()=>{if(!canExport())return;const groups=grouped(),rows=['Bucket\tGL / Ramp Item\tDept\tMemo\tAmount'];for(const g of groups){const d=codingDisplay(g);rows.push(`${g.profile?PROFILE_META[g.profile].short:'Review'}\t${d.coding}\t${d.dept}\t${joinMemos(g.memos)}\t${money(g.total)}`)}rows.push(`\t\t\tTransaction Total\t${money(groups.reduce((s,g)=>s+g.total,0))}`);const text=rows.join('\n');try{await navigator.clipboard.writeText(text);$('copyBtn').textContent='Copied';setTimeout(()=>$('copyBtn').textContent='Copy Ramp Split',1200)}catch{prompt('Copy Ramp Split:',text)}};
+$('copyBtn').onclick=async()=>{const groups=grouped(),rows=['Bucket\tGL / Ramp Item\tDept\tMemo\tAmount'];for(const g of groups){const d=codingDisplay(g);rows.push(`${g.profile?PROFILE_META[g.profile].short:'Review'}\t${d.coding}\t${d.dept}\t${joinMemos(g.memos)}\t${money(g.total)}`)}rows.push(`\t\t\tTransaction Total\t${money(groups.reduce((s,g)=>s+g.total,0))}`);const text=rows.join('\n');try{await navigator.clipboard.writeText(text);$('copyBtn').textContent='Copied';setTimeout(()=>$('copyBtn').textContent='Copy Ramp Split',1200)}catch{prompt('Copy Ramp Split:',text)}};
 $('managerBtn').onclick=openManager;$('closeManager').onclick=closeManager;$('doneManager').onclick=closeManager;$('managerModal').addEventListener('click',e=>{if(e.target===$('managerModal'))closeManager()});$('managerProfile').onchange=()=>{managerSelectedCode=profileOptions($('managerProfile').value)[0].code;renderManager()};$('resetKeywords').onclick=()=>{const p=$('managerProfile').value;rules[p]=JSON.parse(JSON.stringify(DEFAULT_RULES[p]));saveRules();renderManager()};
-
-let receiptDraft=null, originalAmazon=null, draftItemsChanged=false, sourceURL='', busy=false, finalTaxTarget=0;
-function invalidateReview(){if($('confirmReview'))$('confirmReview').checked=false;}
-function clearReceipt(){
- if(sourceURL)URL.revokeObjectURL(sourceURL);sourceURL='';receiptDraft=null;originalAmazon=null;draftItemsChanged=false;
- $('receiptEditor').hidden=true;$('rawText').value='';$('sourcePreview').replaceChildren();$('openOriginal').hidden=true;invalidateReview();
-}
-function handleFiles(files){if(busy)return;if(files.length!==1){setStatus('Choose one receipt at a time. For multiple pages, use a single PDF.',true);return;}handleFile(files[0]);}
-function percentile(values, fraction){const a=[...values].sort((x,y)=>x-y);return a[Math.min(a.length-1,Math.floor(a.length*fraction))]||0;}
-function receiptCanvas(width,height){const c=document.createElement('canvas');c.width=Math.max(1,Math.round(width));c.height=Math.max(1,Math.round(height));return c;}
-function receiptPaperBounds(source){
- const sample=receiptCanvas(300,300*source.height/source.width),ctx=sample.getContext('2d',{willReadFrequently:true});ctx.drawImage(source,0,0,sample.width,sample.height);
- const {data}=ctx.getImageData(0,0,sample.width,sample.height),gray=(x,y)=>{const i=(y*sample.width+x)*4;return .299*data[i]+.587*data[i+1]+.114*data[i+2];};
- const columns=[];for(let x=0;x<sample.width;x++){const a=[];for(let y=Math.floor(sample.height*.1);y<sample.height*.9;y+=2)a.push(gray(x,y));columns.push(percentile(a,.8));}
- const lo=percentile(columns,.1),hi=percentile(columns,.9);
- let left=0,right=sample.width,top=0,bottom=sample.height;
- if(hi-lo>24){
-  const threshold=lo+(hi-lo)*.55;let start=0,best=[0,0];
-  for(let x=0;x<=columns.length;x++){if(x<columns.length&&columns[x]>threshold)continue;if(x-start>best[1]-best[0])best=[start,x];start=x+1;}
-  if(best[1]-best[0]>sample.width*.35&&best[1]-best[0]<sample.width*.94&&best[0]<sample.width*.6&&best[1]>sample.width*.4){left=Math.max(0,best[0]-4);right=Math.min(sample.width,best[1]+4);}
- }
- if(left||right<sample.width){
-  const rows=[];for(let y=0;y<sample.height;y++){const a=[];for(let x=Math.round(left+(right-left)*.1);x<left+(right-left)*.9;x+=2)a.push(gray(x,y));rows.push(percentile(a,.8));}
-  const floor=percentile(rows,.05),ceiling=percentile(rows,.9),threshold=floor+(ceiling-floor)*.5;
-  if(ceiling-floor>30){while(top<sample.height*.2&&rows[top]<threshold)top++;while(bottom>sample.height*.8&&rows[bottom-1]<threshold)bottom--;top=Math.max(0,top-4);bottom=Math.min(sample.height,bottom+4);}
- }
- return {x:left/sample.width*source.width,y:top/sample.height*source.height,width:(right-left)/sample.width*source.width,height:(bottom-top)/sample.height*source.height};
-}
-function receiptDeskew(source){
- const sample=receiptCanvas(500,500*source.height/source.width),ctx=sample.getContext('2d',{willReadFrequently:true});ctx.drawImage(source,0,0,sample.width,sample.height);const {data}=ctx.getImageData(0,0,sample.width,sample.height),points=[];
- for(let y=Math.floor(sample.height*.33);y<sample.height*.8;y+=2)for(let x=25;x<475;x+=2){if(data[(y*sample.width+x)*4]<105)points.push([x-250,y-sample.height/2]);}
- if(points.length<150)return 0;
- let best=0,score=0,unrotated=0;
- for(let angle=-5;angle<=5;angle+=.5){const radians=angle*Math.PI/180,sin=Math.sin(radians),cos=Math.cos(radians),rows=new Uint32Array(sample.height+100);for(const [x,y] of points){const line=Math.round(x*sin+y*cos+sample.height/2+50);if(line>=0&&line<rows.length)rows[line]++;}const next=rows.reduce((s,n)=>s+n*n,0);if(angle===0)unrotated=next;if(next>score){score=next;best=angle;}}
- return score>unrotated*1.08?best:0;
-}
-async function prepareReceiptImage(source){
- let bitmap=source,owned=false;if(source instanceof Blob){bitmap=await createImageBitmap(source,{imageOrientation:'from-image'});owned=true;}
- try{
-  const full=receiptCanvas(bitmap.width,bitmap.height);full.getContext('2d').drawImage(bitmap,0,0);const bounds=receiptPaperBounds(full);
-  const scale=Math.min(3,2600/Math.max(bounds.width,bounds.height)),crop=receiptCanvas(bounds.width*scale,bounds.height*scale),ctx=crop.getContext('2d',{willReadFrequently:true});
-  ctx.fillStyle='white';ctx.fillRect(0,0,crop.width,crop.height);ctx.drawImage(full,bounds.x,bounds.y,bounds.width,bounds.height,0,0,crop.width,crop.height);full.width=1;full.height=1;
-  const pixels=ctx.getImageData(0,0,crop.width,crop.height),hist=new Uint32Array(256);for(let i=0;i<pixels.data.length;i+=4){const gray=Math.round(.299*pixels.data[i]+.587*pixels.data[i+1]+.114*pixels.data[i+2]);pixels.data[i]=gray;hist[gray]++;}
-  const quantile=f=>{let n=0;for(let i=0;i<256;i++){n+=hist[i];if(n>=crop.width*crop.height*f)return i;}return 255;};const low=quantile(.01),high=quantile(.99),span=Math.max(1,high-low);
-  for(let i=0;i<pixels.data.length;i+=4){const value=Math.max(0,Math.min(255,Math.round((pixels.data[i]-low)*255/span)));pixels.data[i]=pixels.data[i+1]=pixels.data[i+2]=value;pixels.data[i+3]=255;}ctx.putImageData(pixels,0,0);
-  const angle=receiptDeskew(crop),radians=angle*Math.PI/180,w=Math.abs(crop.width*Math.cos(radians))+Math.abs(crop.height*Math.sin(radians)),h=Math.abs(crop.height*Math.cos(radians))+Math.abs(crop.width*Math.sin(radians));
-  const result=receiptCanvas(w+40,h+40),out=result.getContext('2d');out.fillStyle='white';out.fillRect(0,0,result.width,result.height);out.translate(result.width/2,result.height/2);out.rotate(radians);out.drawImage(crop,-crop.width/2,-crop.height/2);return result;
- }finally{if(owned)bitmap.close();}
-}
-
-async function ocrSource(source,label,context){
- if(!context.worker){
-  const mod=await import('https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.esm.min.js');
-  context.worker=await mod.default.createWorker('eng',1,{logger:m=>{if(m.status==='recognizing text')setStatus(`${label} — ${Math.round(m.progress*100)}%`);}});
- }
- setStatus('Preparing receipt photo…');const prepared=await prepareReceiptImage(source);let best=null;
- try{
-  for(const mode of ['6','3']){
-   setStatus(`${label} — ${mode==='6'?'reading items':'checking another layout'}…`);
-   await context.worker.setParameters({tessedit_pageseg_mode:mode,preserve_interword_spaces:'1'});
-   const {data}=await context.worker.recognize(prepared),rating=receiptReadScore(data);
-   if(!best||rating.score>best.score)best={text:data.text,...rating};
-   if(rating.balanced)break;
-  }
-  // If the paper boundary was uncertain, retain a full-image fallback.
-  if(!best?.balanced){
-   await context.worker.setParameters({tessedit_pageseg_mode:'3'});
-   const {data}=await context.worker.recognize(source),rating=receiptReadScore(data);
-   if(!best||rating.score>best.score)best={text:data.text,...rating};
-  }
-  return best?.text||'';
- }finally{prepared.width=1;prepared.height=1;}
-}
-
-async function handleFile(file){
- if(busy||!file)return;
- if(!/\.(pdf|png|jpe?g|webp|bmp)$/i.test(file.name)&&!['application/pdf','image/png','image/jpeg','image/webp','image/bmp'].includes(file.type)){setStatus('Use PDF, JPG, PNG, WebP or BMP. Export HEIC photos as JPG or PNG first.',true);return;}
- if(file.size>30*1024*1024){setStatus('Please use a receipt smaller than 30 MB.',true);return;}
- reset();busy=true;currentFile=file;
- $('pdfInput').disabled=true;$('manualBtn').disabled=true;
- let context={},pdf=null,text='',usedOCR=false;
- try{
-  setStatus('Reading receipt…');sourceURL=URL.createObjectURL(file);
-  const isPDF=file.type==='application/pdf'||/\.pdf$/i.test(file.name);
-  const preview=document.createElement(isPDF?'object':'img');
-  if(isPDF){preview.data=sourceURL;preview.type='application/pdf';preview.textContent='Use Open original to view this PDF.';}else{preview.src=sourceURL;preview.alt='Original receipt';}
-  $('sourcePreview').appendChild(preview);$('openOriginal').href=sourceURL;$('openOriginal').hidden=false;
-  if(isPDF){
-   const library=await loadPdf();pdf=await library.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise;
-   if(pdf.numPages>25)throw new Error('This PDF has more than 25 pages. Use a shorter receipt PDF.');
-   const parts=[];
-   for(let p=1;p<=pdf.numPages;p++){
-    setStatus(`Reading PDF page ${p} of ${pdf.numPages}…`);
-    const page=await pdf.getPage(p),rows=await pageLines(page);
-    if(rows.join('').length>=35 && rows.some(r=>/\d+\.\d{2}/.test(r)))parts.push(rows.join('\n'));
-    else{
-     usedOCR=true;const base=page.getViewport({scale:1}),scale=Math.min(2.5,2400/Math.max(base.width,base.height));
-     const viewport=page.getViewport({scale}),canvas=document.createElement('canvas');canvas.width=Math.ceil(viewport.width);canvas.height=Math.ceil(viewport.height);
-     await page.render({canvasContext:canvas.getContext('2d'),viewport}).promise;
-     parts.push(await ocrSource(canvas,`Reading scanned page ${p} of ${pdf.numPages}`,context));canvas.width=0;canvas.height=0;
-    }page.cleanup();
-   }text=parts.join('\n');
-  }else{usedOCR=true;text=await ocrSource(file,'Reading receipt image',context);}
-  $('rawText').value=text;
-  const generic=parseReceipt(text);
-  if(/amazon/i.test(text)){
-   try{originalAmazon=parseAmazon(text.split(/\r?\n/));generic.merchant='Amazon';generic.reference=originalAmazon.order;generic.date=originalAmazon.date;generic.total=originalAmazon.orderTotal;generic.tax=originalAmazon.items.reduce((s,x)=>s+x.tax,0);generic.items=originalAmazon.items.map(x=>({description:x.description,amount:x.amount}));}catch{originalAmazon=null;}
-  }
-  receiptDraft=generic;draftItemsChanged=false;showEditor();
-  $('readNote').textContent=generic.items.length?`${generic.items.length} items found. Check the descriptions and amounts below, then choose Use Reviewed Receipt.`:'The reader could not identify the items reliably. Try a closer, straight-on photo with the receipt filling the frame, or enter the items below.';
-  setStatus(generic.items.length?'Receipt read. Review the details below.':'Receipt reading needs a clearer image.',!generic.items.length);
- }catch(error){
-  originalAmazon=null;receiptDraft=parseReceipt('');showEditor();$('readNote').textContent='Automatic reading could not finish. You can paste text or enter the items manually.';setStatus(`Could not read the receipt: ${error.message}`,true);
- }finally{
-  if(context.worker)await context.worker.terminate().catch(()=>{});if(pdf)await pdf.destroy().catch(()=>{});
-  busy=false;$('pdfInput').disabled=false;$('manualBtn').disabled=false;
- }
-}
-function showEditor(){
- $('receiptEditor').hidden=false;invalidateReview();$('content').style.display='none';$('uploadCard').style.display='none';$('loadedBar').style.display='none';
- $('editMerchant').value=receiptDraft.merchant;$('editReference').value=receiptDraft.reference;$('editDate').value=receiptDraft.date;
- $('editTotal').value=receiptDraft.total??'';$('editTax').value=Number(receiptDraft.tax.toFixed(2));renderDraft();
-}
-function renderDraft(){
- $('editItems').innerHTML=receiptDraft.items.map((x,i)=>`<tr><td><input type="text" data-row="${i}" data-part="description" aria-label="Description ${i+1}" value="${esc(x.description)}"></td><td><input type="number" step="0.01" data-row="${i}" data-part="amount" aria-label="Amount before tax ${i+1}" value="${Number.isFinite(x.amount)?x.amount:''}"></td><td><button class="remove-item" data-remove-row="${i}" aria-label="Remove item ${i+1}">×</button></td></tr>`).join('');
- $('editItems').querySelectorAll('input').forEach(el=>el.oninput=()=>{draftItemsChanged=true;receiptDraft.items[+el.dataset.row][el.dataset.part]=el.dataset.part==='amount'?(el.value===''?NaN:Number(el.value)):el.value;updateDraftBalance();});
- $('editItems').querySelectorAll('button').forEach(el=>el.onclick=()=>{draftItemsChanged=true;receiptDraft.items.splice(+el.dataset.removeRow,1);renderDraft();});updateDraftBalance();
-}
-function updateDraftBalance(){
- const tax=$('editTax').value===''?NaN:Number($('editTax').value),total=$('editTotal').value===''?null:Number($('editTotal').value);
- const valid=receiptDraft.items.length>0&&receiptDraft.items.every(x=>x.description.trim()&&validMoney(x.amount))&&validMoney(tax)&&total!==null&&validMoney(total)&&$('editMerchant').value.trim();
- const b=receiptBalance(receiptDraft.items,tax,total),balanced=valid&&b.difference===0;
- $('editBalance').textContent=!valid?'Enter a merchant, receipt total, tax and at least one complete item.':balanced?`Items + tax: ${money(b.sum)} • Matches receipt total`:`Items + tax: ${money(b.sum)} • Receipt: ${money(total)} • Difference: ${money(b.difference)}. Correct or add the missing items before continuing.`;
- $('editBalance').className='balance'+(balanced?' good':'');$('useReceipt').disabled=!balanced;return balanced;
-}
-function useReceipt(){
- if(!updateDraftBalance())return;
- receiptDraft.merchant=$('editMerchant').value.trim();receiptDraft.reference=$('editReference').value.trim();receiptDraft.date=$('editDate').value.trim();receiptDraft.tax=Number($('editTax').value);receiptDraft.total=Number($('editTotal').value);
- const base=originalAmazon&&!draftItemsChanged?originalAmazon:null;
- const items=base?base.items:allocateReceiptTax(receiptDraft.items,receiptDraft.tax).map(x=>({...x,qty:1,shipmentDate:'',shipmentDateText:''}));
- parsedReceipt={...(base||{}),amazon:!!base,merchant:receiptDraft.merchant,order:receiptDraft.reference||'—',date:receiptDraft.date||'—',orderTotal:receiptDraft.total,items,shipments:base?base.shipments:[],transactions:base?base.transactions:[]};
- $('orderNumber').textContent=parsedReceipt.order;$('orderDate').textContent=parsedReceipt.date;$('orderTotal').textContent=money(parsedReceipt.orderTotal);$('merchantHeading').textContent=parsedReceipt.merchant;
- $('receiptEditor').hidden=true;$('content').style.display='block';$('loadedBar').style.display='flex';$('loadedName').textContent=currentFile?.name||'Manual receipt';
- $('rampAmount').value=$('rampAmountBefore').value;$('rampDate').value=$('rampDateBefore').value;
- allLines=items.map(x=>({...x}));finalTaxTarget=items.reduce((s,x)=>s+cents(x.tax),0);
- if(base){matchTransaction($('rampAmount').value,$('rampDate').value);finalTaxTarget=allLines.reduce((s,x)=>s+cents(x.tax),0);}else applyRouting();
- checkFinal();updateLoadedMeta();window.scrollTo({top:0,behavior:'smooth'});
-}
-function checkFinal(){
- if(!$('finalBalance')||!parsedReceipt)return false;
- const entered=$('rampAmount').value,target=entered===''?parsedReceipt.orderTotal:Number(entered),sum=allLines.reduce((s,x)=>s+cents(x.lineTotal),0),delta=cents(target)-sum;
- const taxSum=allLines.reduce((s,x)=>s+cents(x.tax),0),valid=allLines.length>0&&allLines.every(x=>x.description.trim()&&validMoney(x.lineTotal)&&validMoney(x.tax)&&x.profile&&x.coding);
- const balanced=validMoney(target)&&delta===0&&taxSum===finalTaxTarget;
- $('finalBalance').textContent=`Split: ${money(sum/100)} • ${entered===''?'Receipt':'Ramp charge'}: ${money(target)} • Difference: ${Number.isFinite(delta)?money(delta/100):'Check amounts'}.`+(taxSum!==finalTaxTarget?' Item taxes do not match the selected receipt tax.':'')+(!valid?' Review missing coding or item details.':balanced?' Totals match.':' Correct the amounts before exporting.');
- $('finalBalance').className='balance'+(balanced&&valid?' good':'');
- if(!parsedReceipt.amazon){$('matchResult').textContent='The complete receipt is included. Enter a Ramp amount to compare; matching does not change item amounts.';$('matchCard').className='match-card';}
- const ready=balanced&&valid&&$('confirmReview').checked;
- $('copyBtn').disabled=!ready;$('printBtn').disabled=!ready;return ready;
-}
-function canExport(){if(checkFinal())return true;setStatus('Resolve the difference and missing coding, then confirm your review before exporting.',true);return false;}
-$('manualBtn').onclick=()=>{if(busy)return;reset();receiptDraft=parseReceipt('');showEditor();$('readNote').textContent='Enter the details from your receipt, or paste the receipt text on the right.';};
-$('editorNew').onclick=()=>{if(!busy)reset();};
-$('addItem').onclick=()=>{draftItemsChanged=true;receiptDraft.items.push({description:'',amount:NaN});renderDraft();$('editItems').lastElementChild?.querySelector('input')?.focus();};
-for(const id of ['editMerchant','editTotal','editTax'])$(id).addEventListener('input',()=>{if(id==='editTax')draftItemsChanged=true;updateDraftBalance();});
-$('useReceipt').onclick=useReceipt;
-$('editReceiptBtn').onclick=()=>{showEditor();$('readNote').textContent='Editing and using this receipt again rebuilds the split. Recheck your coding afterward.';};
-$('parseText').onclick=()=>{if(busy)return;originalAmazon=null;draftItemsChanged=true;receiptDraft=parseReceipt($('rawText').value);showEditor();$('readNote').textContent='Check the suggested rows against the receipt. Read Text Again replaces the item list.';};
-$('confirmReview').onchange=checkFinal;
-for(const id of ['rampAmount','rampDate'])$(id).addEventListener('input',()=>{invalidateReview();checkFinal();});
-$('matchBtn').onclick=()=>{if(!parsedReceipt)return;matchTransaction($('rampAmount').value,$('rampDate').value);if(parsedReceipt.amazon)finalTaxTarget=allLines.reduce((s,x)=>s+cents(x.tax),0);checkFinal();};
-// Do not navigate away when a receipt is dropped outside the chooser.
-window.addEventListener('dragover',e=>e.preventDefault());window.addEventListener('drop',e=>{e.preventDefault();if(!drop.contains(e.target))handleFiles(e.dataTransfer.files);});
-
 </script>
 </body>
 </html>
